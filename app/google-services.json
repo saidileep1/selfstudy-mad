@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "654444498096",
+    "firebase_url": "https://selfstudy-92a72.firebaseio.com",
+    "project_id": "selfstudy-92a72",
+    "storage_bucket": "selfstudy-92a72.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:654444498096:android:060efca1e017580a52ff75",
+        "android_client_info": {
+          "package_name": "com.example.selfstudy_mad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "654444498096-icp64ib26cln684bmlcndo94gtg6hc5t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.selfstudy_mad",
+            "certificate_hash": "637b5ad1488cd1c0b42cd997cfbdf3a63c516e01"
+          }
+        },
+        {
+          "client_id": "654444498096-ugk2gmou0a5gep0scl00bg8o9lqrvjej.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhBtmaMQF0C1WpqpFGmuJbRBD0jEOmCGk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "654444498096-ugk2gmou0a5gep0scl00bg8o9lqrvjej.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
