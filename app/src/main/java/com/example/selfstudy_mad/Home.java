@@ -59,6 +59,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         category=database.getReference("Category");
 
 
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
