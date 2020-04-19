@@ -1,11 +1,12 @@
 package com.example.selfstudy_mad;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     TextView txtFullName;
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
+
+    FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,21 +93,31 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     }
 
     private void loadMenu() {
-        FirebaseRecyclerAdapter<Category, MenuViewHolder>adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class,R.layout.menu_item,MenuViewHolder.class,category) {
+       adapter = new FirebaseRecyclerAdapter<Category, MenuViewHolder>(Category.class,
+               R.layout.menu_item,
+               MenuViewHolder.class,category) {
             @Override
             protected void populateViewHolder(MenuViewHolder menuViewHolder, Category model, int position) {
             menuViewHolder.txtMenuName.setText(model.getName());
-                Picasso.with(getBaseContext()).load(model.getImage()).into(menuViewHolder.imageView);
+                Picasso.with(getBaseContext())
+                        .load(model.getImage())
+                        .into(menuViewHolder.imageView);
                 final Category clickitem=model;
                 menuViewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Toast.makeText(Home.this,""+clickitem.getName(),Toast.LENGTH_SHORT).show();
+
+                        //get category id and send to new activity
+                        Intent foodlist =new Intent(Home.this,FoodList.class);
+                        //Categoryid is key,just the key
+                       foodlist.putExtra("categoryId",adapter.getRef(position).getKey());
+                        startActivity(foodlist);
                     }
                 });
 
             }
         };
+        Log.d("TAG",""+adapter.getItemCount());
         recycler_menu.setAdapter(adapter);
 
     }//ccc
