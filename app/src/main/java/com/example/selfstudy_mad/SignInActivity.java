@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -19,9 +20,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import io.paperdb.Paper;
+
 public class SignInActivity extends AppCompatActivity {
     EditText edtPhone, edtPassword;
     Button btnSignIn;
+    CheckBox btncheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +35,26 @@ public class SignInActivity extends AppCompatActivity {
         edtPhone = findViewById(R.id.phnum);
         edtPassword = findViewById(R.id.pwd);
         btnSignIn = findViewById(R.id.signin);
+        btncheckbox=findViewById(R.id.rememberme);
 
+        //init paper
+        Paper.init(this);
+
+        //Init Firebase
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference table_user = database.getReference("User");
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //save user and password
+                if(btncheckbox.isChecked())
+                {
+                    Paper.book().write(common.USER_KEY,edtPhone.getText().toString());
+                    Paper.book().write(common.PWD_KEY,edtPassword.getText().toString());
+
+                }
 
                 final ProgressDialog mDialog = new ProgressDialog(SignInActivity.this);
                 mDialog.setMessage("please wait...");

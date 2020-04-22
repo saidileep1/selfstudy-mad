@@ -3,6 +3,7 @@ package com.example.selfstudy_mad.ViewHolder;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +17,15 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.example.selfstudy_mad.Interface.ItemClickListener;
 import com.example.selfstudy_mad.Model.Order;
 import com.example.selfstudy_mad.R;
+import com.example.selfstudy_mad.common.common;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-class  CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+class  CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+        , View.OnContextClickListener, View.OnCreateContextMenuListener {
 
     public TextView txt_cart_name,txt_price;
     public ImageView img_cart_count;
@@ -40,11 +43,23 @@ class  CardViewHolder extends RecyclerView.ViewHolder implements View.OnClickLis
         txt_price=(TextView)itemView.findViewById(R.id.cart_item_Price);
         img_cart_count=(ImageView)itemView.findViewById(R.id.cart_item_count);
 
+        itemView.setOnCreateContextMenuListener(this);
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public boolean onContextClick(View v) {
+        return false;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Select Action");
+        menu.add(0,0,getAdapterPosition(), common.DELETE);
     }
 }
 

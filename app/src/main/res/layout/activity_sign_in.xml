@@ -110,35 +110,48 @@ app:layout_constraintEnd_toEndOf="parent"
 app:layout_constraintStart_toStartOf="parent"
 app:layout_constraintTop_toBottomOf="@+id/pwd" />
 
-<TextView
-android:id="@+id/textView5"
-android:layout_width="wrap_content"
-android:layout_height="35dp"
-android:layout_marginStart="32dp"
-android:layout_marginTop="20dp"
-android:layout_marginEnd="32dp"
-android:text="Forgot Password?"
-android:textColor="@color/colorPrimary"
-android:textSize="18sp"
-android:textStyle="bold"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintHorizontal_bias="0.502"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@+id/signin" />
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/rememberme"
+        style="@style/Material.Drawable.CheckBox"
+        android:layout_width="173dp"
+        android:layout_height="49dp"
+        android:text="Remember me"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/textView5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signin" />
 
-<TextView
-android:id="@+id/textView6"
-android:layout_width="0dp"
-android:layout_height="wrap_content"
-android:layout_marginStart="106dp"
-android:layout_marginTop="17dp"
-android:layout_marginEnd="105dp"
-android:text="New User? Register Here"
-android:textColor="@color/colorPrimary"
-android:textSize="18sp"
-android:textStyle="bold"
-app:layout_constraintEnd_toEndOf="parent"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintTop_toBottomOf="@+id/textView5" />
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="32dp"
+        android:text="Forgot Password?"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/signin" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="105dp"
+        android:text="New User? Register Here"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

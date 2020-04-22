@@ -1,7 +1,5 @@
 package com.example.selfstudy_mad.Model;
 
-import android.text.Editable;
-
 import java.util.List;
 
 public class Request {
@@ -10,9 +8,11 @@ public class Request {
     private String name;
     private String address;
     private String total;
+    private String status;
     private List<Order> foods;
 
-    public Request(String phone, String name, Editable text, String total, List<Order> cart){}
+    public Request() {
+    }
 
     public Request(String phone, String name, String address, String total, List<Order> foods) {
         this.phone = phone;
@@ -20,6 +20,15 @@ public class Request {
         this.address = address;
         this.total = total;
         this.foods = foods;
+        this.status="0";//default 0:Place,1:shipping
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getPhone() {

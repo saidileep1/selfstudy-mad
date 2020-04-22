@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:theme">
-        <activity android:name=".Cart"></activity>
+        <activity android:name=".OrderStatus"></activity>
+        <activity android:name=".Cart" />
         <activity android:name=".FoodDetails" />
         <activity android:name=".FoodList" />
         <activity

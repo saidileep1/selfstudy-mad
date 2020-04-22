@@ -7,6 +7,9 @@ public class Order {
     private String Quantity;
     private String Price;
 
+    public Order() {
+    }
+
     public Order(String productId, String productName, String quantity, String price) {
         ProductId = productId;
         ProductName = productName;

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -30,6 +31,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
+
+import io.paperdb.Paper;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -57,6 +60,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         database=FirebaseDatabase.getInstance();
         category=database.getReference("Category");
 
+        //inti paper
+
+        Paper.init(this);
+
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -68,18 +75,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                    }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        //NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
-                R.id.nav_tools, R.id.nav_share, R.id.nav_send)
-                .setDrawerLayout(drawer)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
-        NavigationUI.setupWithNavController(navigationView, navController);
+        ActionBarDrawerToggle toggle =
 
+                new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+
+
+        drawer.setDrawerListener(toggle);
+
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+
+        navigationView.setNavigationItemSelectedListener(this);
         //Set name for user
         View headerView=navigationView.getHeaderView(0);
         txtFullName=(TextView)headerView.findViewById(R.id.txtFullName);
@@ -144,11 +155,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         }
         else if(id==R.id.nav_cart){
+            Intent cart=new Intent(Home.this,Cart.class);
+            startActivity(cart);
 
         }
         else if(id==R.id.nav_orders){
+            Intent order=new Intent(Home.this,OrderStatus.class);
+            startActivity(order);
 
         }else if(id==R.id.nav_log_out){
+            //Delete Rememnber me
+Paper.book().destroy();
+
+            //Logout
+            Intent signin=new Intent(Home.this,SignInActivity.class);
+            signin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(signin);
 
         }
 
