@@ -1,17 +1,15 @@
 package com.example.selfstudy_mad;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.selfstudy_mad.Model.User;
 import com.example.selfstudy_mad.common.common;
@@ -56,6 +54,7 @@ public class SignInActivity extends AppCompatActivity {
                             //get user inf0
                             mDialog.dismiss();
                             User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
+                            user.setPhone(edtPhone.getText().toString());
                             if (user.getPassword().equals(edtPassword.getText().toString())) {
                                 Intent homeIntent=new Intent(SignInActivity.this,Home.class);
                                 common.currentUser=user;
