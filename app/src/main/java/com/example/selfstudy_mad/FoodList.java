@@ -231,26 +231,26 @@ public class FoodList extends AppCompatActivity {
             protected void onBindViewHolder(@NonNull final FoodViewHolder foodViewHolder, final int i, @NonNull final Food food) {
 
                 foodViewHolder.txtfoodName.setText(food.getName());
-                foodViewHolder.txtfoodPrice.setText(String.format("Rs. %s",food.getPrice()));
+                foodViewHolder.txtfoodPrice.setText(String.format("Rs. %s", food.getPrice()));
                 Picasso.with(getBaseContext()).load(food.getImage())
                         .into(foodViewHolder.foodimageView);
 
                 //Quick Cart
 
-                final boolean isExists=new Database(getBaseContext()).checkFoodExists( adapter.getRef(i).getKey(),common.currentUser.getPhone());
+                final boolean isExists = new Database(getBaseContext()).checkFoodExists(adapter.getRef(i).getKey(), common.currentUser.getPhone());
                 if (!isExists)
                     foodViewHolder.quickaddcart.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
-                                new Database(getBaseContext()).addToCart(new Order(
-                                        common.currentUser.getPhone(),
-                                        adapter.getRef(i).getKey(),
-                                        food.getName(),
-                                        "1",
-                                        food.getPrice(),
-                                        food.getImage()
-                                ));
+                            new Database(getBaseContext()).addToCart(new Order(
+                                    common.currentUser.getPhone(),
+                                    adapter.getRef(i).getKey(),
+                                    food.getName(),
+                                    "1",
+                                    food.getPrice(),
+                                    food.getImage()
+                            ));
 
                          /*   else {
                                 new Database(getBaseContext()).increaseCart(common.currentUser.getPhone(), adapter.getRef(i).getKey());
@@ -260,45 +260,19 @@ public class FoodList extends AppCompatActivity {
                         }
                     });
 
-                //add favourites
-               // if (localdb.isFavourite(adapter.getRef(i).getKey()))
-                 //   foodViewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
 
-                //Click to change of Favourites
-             //   foodViewHolder.fav_image.setOnClickListener(new View.OnClickListener() {
-               //     @Override
-                 //   public void onClick(View v) {
-                  //      if (!localdb.isFavourite(adapter.getRef(i).getKey()))
-                    //    {
-                      //     localdb.addToFavourites(adapter.getRef(i).getKey());
-                       //     foodViewHolder.fav_image.setImageResource(R.drawable.ic_favorite_black_24dp);
-                        //    Toast.makeText(FoodList.this,""+food.getName()+"was added to favourites",Toast.LENGTH_SHORT).show();
-                        //}
-                        //else
-                        //{
-                          //  localdb.removeFromFavourites(adapter.getRef(i).getKey());
-                            //foodViewHolder.fav_image.setImageResource(R.drawable.ic_favorite_border_black_24dp);
-                            //Toast.makeText(FoodList.this,""+food.getName()+"was removed to favourites",Toast.LENGTH_SHORT).show();
-
-                   //     }
-                    //}
-               // });
-
-                final Food local=food;
+                final Food local = food;
                 foodViewHolder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
 
                         //Start Food Details activity
-                        Intent fooddetail =new Intent(FoodList.this,FoodDetails.class);
-                        fooddetail.putExtra("FoodId",adapter.getRef(position).getKey());//send foodid
+                        Intent fooddetail = new Intent(FoodList.this, FoodDetails.class);
+                        fooddetail.putExtra("FoodId", adapter.getRef(position).getKey());//send foodid
                         startActivity(fooddetail);
-                        Toast.makeText(FoodList.this,""+local.getName(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FoodList.this, "" + local.getName(), Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-
             }
 
 

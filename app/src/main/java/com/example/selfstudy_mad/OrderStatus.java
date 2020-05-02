@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import com.example.selfstudy_mad.ViewHolder.OrderViewHolder;
 import com.example.selfstudy_mad.common.common;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -79,6 +82,15 @@ public class OrderStatus extends AppCompatActivity {
                         startActivity(orderdetail);
                     }
                 });
+                orderViewHolder.Imgdeleteorder.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(adapter.getItem(i).getStatus().equals("0"))
+                            deleteOrder(adapter.getRef(i).getKey());
+                        else
+                            Toast.makeText(OrderStatus.this,"You can't Cancel this order!!",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
 
@@ -93,6 +105,24 @@ public class OrderStatus extends AppCompatActivity {
         adapter.startListening();
 
         recyclerView.setAdapter(adapter);
+    }
+
+    private void deleteOrder(String key) {
+        requests.child(key)
+                .removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(OrderStatus.this,"You Order has been Cancelled!!",Toast.LENGTH_SHORT).show();
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(OrderStatus.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     @Override

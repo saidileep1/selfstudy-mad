@@ -205,7 +205,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
             }
         });
-        mSlider.setPresetTransformer(SliderLayout.Transformer.FlipHorizontal);
+        mSlider.setPresetTransformer(SliderLayout.Transformer.Background2Foreground);
         mSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
         mSlider.setCustomAnimation(new DescriptionAnimation());
         mSlider.setDuration(4000);
