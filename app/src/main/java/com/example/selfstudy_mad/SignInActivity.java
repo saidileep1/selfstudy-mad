@@ -1,12 +1,16 @@
 package com.example.selfstudy_mad;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,27 +30,54 @@ public class SignInActivity extends AppCompatActivity {
     EditText edtPhone, edtPassword;
     Button btnSignIn;
     CheckBox btncheckbox;
+    TextView txtForgotpassword,txtnewuser;
+    EditText s;
+
+    FirebaseDatabase database;
+    DatabaseReference table_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        edtPhone = findViewById(R.id.phnum);
-        edtPassword = findViewById(R.id.pwd);
+        edtPhone = findViewById(R.id.userphnum);
+        edtPassword = findViewById(R.id.userpwd);
         btnSignIn = findViewById(R.id.signin);
         btncheckbox=findViewById(R.id.rememberme);
+        txtnewuser=findViewById(R.id.newuser);
+        //txtForgotpassword=findViewById(R.id.forgotpassword);
+        //s=findViewById(R.id.secure);
+
+
 
         //init paper
         Paper.init(this);
 
         //Init Firebase
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference table_user = database.getReference("User");
+         database = FirebaseDatabase.getInstance();
+         table_user = database.getReference("User");
+
+        /*txtForgotpassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showForgotpwd();
+            }
+        });*/
+        txtnewuser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(SignInActivity.this,SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if (common.isConnectedToInternet(getBaseContext())){
+
 
                 //save user and password
                 if(btncheckbox.isChecked())
@@ -63,7 +94,7 @@ public class SignInActivity extends AppCompatActivity {
 
 
 
-                table_user.addValueEventListener(new ValueEventListener() {
+                table_user.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     //check if user not in db
@@ -77,8 +108,11 @@ public class SignInActivity extends AppCompatActivity {
                                 common.currentUser=user;
                                 startActivity(homeIntent);
                                 finish();
+
+                                table_user.removeEventListener(this);
                             } else {
                                 Toast.makeText(SignInActivity.this, "Wrong pasword", Toast.LENGTH_SHORT).show();
+
                             }
                         }
                         else
@@ -94,9 +128,64 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
             }
+                else
+                {
+                    Toast.makeText(SignInActivity.this,"Please check Your Connection",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+            }
         });
 
 
 
+    }
+
+    private void showForgotpwd() {
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Forgot Password");
+        builder.setMessage("Enter Your Secure Code");
+
+        LayoutInflater inflater=this.getLayoutInflater();
+        View forgot=inflater.inflate(R.layout.forgot_password,null);
+
+        builder.setView(forgot);
+
+      final  EditText phone=forgot.findViewById(R.id.phnum);
+        //final EditText s=(EditText)forgot.findViewById(R.id.secure);
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //check if user is available
+                table_user.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        User user=dataSnapshot.child(phone.getText().toString()).getValue(User.class);
+                        Toast.makeText(SignInActivity.this,"kk:"+s.getText().toString(),Toast.LENGTH_SHORT).show();
+
+                       // if (user.getSecure().equals(s.getText().toString())) {
+                          //  Toast.makeText(SignInActivity.this, "Your Password :"+user.getPassword(), Toast.LENGTH_SHORT).show();
+                      //  }else
+                        //    Toast.makeText(SignInActivity.this,"Wrong Secure code!",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
     }
 }

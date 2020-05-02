@@ -1,7 +1,12 @@
 package com.example.selfstudy_mad;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,8 +15,10 @@ import com.example.selfstudy_mad.Model.Request;
 import com.example.selfstudy_mad.ViewHolder.OrderViewHolder;
 import com.example.selfstudy_mad.common.common;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 public class OrderStatus extends AppCompatActivity {
 
@@ -38,39 +45,67 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        loadOrders(common.currentUser.getPhone());
-
+        //if we start Orderactivity from Home activity
+        //We will no tput any extra,so we just load order by phone from Common
+        if (getIntent().getExtras()==null) {
+            loadOrders(common.currentUser.getPhone());
+        }
+        else
+            loadOrders(getIntent().getStringExtra("userPhone"));
     }
     private void loadOrders(String phone){
-        adapter=new FirebaseRecyclerAdapter<Request, OrderViewHolder>(
-                Request.class,
-                R.layout.order_layout,
-                OrderViewHolder.class,requests.orderByChild("phone")
-                .equalTo(phone)
-        ) {
+
+        Query getOrderByUser=requests.orderByChild("phone")
+                .equalTo(phone);
+        FirebaseRecyclerOptions<Request> options=new FirebaseRecyclerOptions.Builder<Request>()
+                .setQuery(getOrderByUser,Request.class)
+                .build();
+
+
+        adapter=new FirebaseRecyclerAdapter<Request, OrderViewHolder>(options) {
             @Override
-            protected void populateViewHolder(OrderViewHolder orderViewHolder, Request request, int i) {
+            protected void onBindViewHolder(@NonNull OrderViewHolder orderViewHolder, final int i, @NonNull final Request request) {
                 orderViewHolder.txtOrderId.setText(adapter.getRef(i).getKey());
-                orderViewHolder.txtOrderStatus.setText(convertCodeTOStatus(request.getStatus()));
+                orderViewHolder.txtOrderStatus.setText(common.convertCodeTOStatus(request.getStatus()));
                 orderViewHolder.txtOrderAddress.setText(request.getAddress());
                 orderViewHolder.txtOrderPhone.setText(request.getPhone());
+                orderViewHolder.txtOrderDate.setText(common.getDate(Long.parseLong(adapter.getRef(i).getKey())));
+                orderViewHolder.Orderdetails.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent orderdetail=new Intent(OrderStatus.this,OrderDetails.class);
+                        common.currentRequest=request;
+                        orderdetail.putExtra("OrderId",adapter.getRef(i).getKey());
+                        startActivity(orderdetail);
+                    }
+                });
+
+            }
+
+            @NonNull
+            @Override
+            public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View itemView= LayoutInflater.from(parent.getContext())
+                        .inflate( R.layout.order_layout,parent,false);
+                return new OrderViewHolder(itemView);
             }
         };
+        adapter.startListening();
 
         recyclerView.setAdapter(adapter);
     }
 
-
-    private String convertCodeTOStatus(String status){
-        if (status.equals("0"))
-            return "Placed";
-        else if (status.equals("1"))
-            return "On my way";
-        else
-            return "Shipped";
-
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.startListening();
+    }
 }
 
 

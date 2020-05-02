@@ -2,11 +2,14 @@ package com.example.selfstudy_mad;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,17 +20,31 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.selfstudy_mad.Database.Database;
+import com.example.selfstudy_mad.Model.MyResponse;
+import com.example.selfstudy_mad.Model.Notification;
 import com.example.selfstudy_mad.Model.Order;
 import com.example.selfstudy_mad.Model.Request;
+import com.example.selfstudy_mad.Model.Sender;
+import com.example.selfstudy_mad.Model.Token;
+import com.example.selfstudy_mad.Remote.APIService;
 import com.example.selfstudy_mad.ViewHolder.CartAdapter;
 import com.example.selfstudy_mad.common.common;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Cart extends AppCompatActivity {
 
@@ -38,15 +55,21 @@ public class Cart extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference requests;
 
-    TextView txtTotalPrice;
+    public TextView txtTotalPrice;
     Button btnPlace;
     List<Order> cart=new ArrayList<>();
     CartAdapter adapter;
+    APIService mService;
+
+   public String haddress,gaddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        //Init Service
+        mService=common.getFCMService();
 
         //Firebase
         database =FirebaseDatabase.getInstance();
@@ -81,36 +104,100 @@ public class Cart extends AppCompatActivity {
         alertDialog.setTitle("One more step!");
         alertDialog.setMessage("Enter your Address");
 
-        final EditText address=new EditText(Cart.this);
-        LinearLayout.LayoutParams lp=new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        address.setLayoutParams(lp);
-        alertDialog.setView(address);//Add edit Text to alertdiaog
+        LayoutInflater inflater=this.getLayoutInflater();
+        View order_address_comment=inflater.inflate(R.layout.order_address_comment,null);
+
+        //final MaterialEditText address=(MaterialEditText)order_address_comment.findViewById(R.id.address);
+
+        final MaterialEditText comment=(MaterialEditText)order_address_comment.findViewById(R.id.comment);
+       //gaddress=address.getText().toString();
+
+        //radio
+        final RadioButton homeaddress=(RadioButton) order_address_comment.findViewById(R.id.rdihome);
+        //addrdi address
+        homeaddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    if (TextUtils.isEmpty(common.currentUser.getHomeaddress())||
+                    common.currentUser.getHomeaddress()==null)
+                        Toast.makeText(Cart.this,"Please add your address!",Toast.LENGTH_SHORT).show();
+                    else
+                        haddress=common.currentUser.getHomeaddress();
+                }
+            }
+        });
+
+
+
+
+        alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Create new Request
-                Request  request=new Request(
-                        common.currentUser.getPhone(),
-                        common.currentUser.getName(),
-                        address.getText().toString(),
-                        txtTotalPrice.getText().toString(),
-                        cart
+if (homeaddress.isChecked()){
 
-                );
+    if (haddress==null){
+        Toast.makeText(Cart.this,"Please Update Your Address",Toast.LENGTH_SHORT).show();
+        dialog.dismiss();
+    }
+    else
+    {
+        Request request = new Request(
+                common.currentUser.getPhone(),
+                common.currentUser.getName(),
+                haddress,
+                txtTotalPrice.getText().toString(),
+                "0",
+                comment.getText().toString(),
+                cart
+        );
+
+
+        //Submit to Firebase
+        //Using Sytem.currentmilli to key
+        String order_number=String.valueOf(System.currentTimeMillis());
+        requests.child(order_number).setValue(request);
+        //Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
+        //finish();
+        new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
+        sendNotificationOrder(order_number);
+
+    }
+}
+else{
+    Toast.makeText(Cart.this,"Please select the Address!",Toast.LENGTH_SHORT).show();
+}
+
+
+
+/*else {                Request request = new Request(
+                            common.currentUser.getPhone(),
+                            common.currentUser.getName(),
+                            haddress,
+                            txtTotalPrice.getText().toString(),
+                            "0",
+                            comment.getText().toString(),
+                            cart
+                    );
+
 
                 //Submit to Firebase
                 //Using Sytem.currentmilli to key
-                requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
-                //
-                new Database(getBaseContext()).cleanCart();
-                Toast.makeText(Cart.this,"Thank You,Order Placed",Toast.LENGTH_SHORT).show();
-                finish();
+                String order_number=String.valueOf(System.currentTimeMillis());
+                requests.child(order_number).setValue(request);
+                //Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
+                //finish();
+                new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
+               sendNotificationOrder(order_number);}*/
+
+
+
             }
+
         });
         alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
             @Override
@@ -124,8 +211,53 @@ public class Cart extends AppCompatActivity {
 
     }
 
+    private void sendNotificationOrder(final String order_number) {
+        DatabaseReference tokens =FirebaseDatabase.getInstance().getReference("Token");
+        Query data=tokens.orderByChild("isServerToken").equalTo(true);
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot postSnapShot:dataSnapshot.getChildren())
+                {
+                    Token serverToken=postSnapShot.getValue(Token.class);
+                    //
+                    Notification notification=new Notification("APP","You have new Order"+order_number);
+                    Sender content=new Sender(serverToken.getToken(),notification);
+
+                    mService.sendNotification(content)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+
+                                        if (response.body().success == 1) {
+                                            Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        } else
+                                            Toast.makeText(Cart.this, "Order Failed!Please try again", Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                    Log.e("ERROR",t.getMessage());
+                                }
+                            });
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
     private void loadListFood() {
-        cart=new Database(this).getCarts();
+        cart=new Database(this).getCarts(common.currentUser.getPhone());
         adapter=new CartAdapter(cart,this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -141,19 +273,21 @@ public class Cart extends AppCompatActivity {
         txtTotalPrice.setText(fmt.format(total));
     }
 
+    //Location
+
     @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
+    public boolean onContextItemSelected( MenuItem item) {
         if (item.getTitle().equals(common.DELETE))
             deleteCart(item.getOrder());
         return true;
     }
 
-    private void deleteCart(int order)
+    private void deleteCart(int position)
     {
         //we will remove item by position in order
-        cart.remove(order);
+        cart.remove(position);
         //We will delete all old data fromsqlite
-        new Database(this).cleanCart();
+        new Database(this).cleanCart(common.currentUser.getPhone());
         //update new data from sqlite
         for (Order item:cart)
             new Database(this).addToCart(item);

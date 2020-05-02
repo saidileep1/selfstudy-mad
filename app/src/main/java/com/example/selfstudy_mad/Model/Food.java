@@ -1,56 +1,56 @@
 package com.example.selfstudy_mad.Model;
 
 public class Food {
-  private String Name,Image,MenuId,Description,Price;
+  private String name,image,menuid,description,price;
 
   public Food(){
         }
 
-    private Food(String name, String image, String menuId, String description, String price) {
-        this.Name = name;
-        this.Image = image;
-        this.MenuId = menuId;
-        this.Description = description;
-        this.Price = price;
+    public Food(String name, String image, String menuid, String description, String price) {
+        this.name = name;
+        this.image = image;
+        this.menuid = menuid;
+        this.description = description;
+        this.price = price;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getImage() {
-        return Image;
+        return image;
     }
 
     public void setImage(String image) {
-        Image = image;
+        this.image = image;
     }
 
-    public String getMenuId() {
-        return MenuId;
+    public String getMenuid() {
+        return menuid;
     }
 
-    public void setMenuId(String menuId) {
-        MenuId = menuId;
+    public void setMenuid(String menuid) {
+        this.menuid = menuid;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getPrice() {
-        return Price;
+        return price;
     }
 
     public void setPrice(String price) {
-        Price = price;
+        this.price = price;
     }
 }

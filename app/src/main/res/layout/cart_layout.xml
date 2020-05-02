@@ -6,49 +6,63 @@
     android:layout_margin="8dp"
     app:cardElevation="4dp">
 
+
+
     <LinearLayout
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:id="@+id/view_foreground"
+        android:background="@android:color/white"
+        android:layout_margin="8dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/cart_image"/>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_weight="9"
+
             android:layout_width="0dp"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:orientation="vertical">
+
 
             <TextView
                 android:id="@+id/cart_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical|start"
-                android:textAllCaps="true"
                 android:text="Food 01"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:textAllCaps="true"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/cart_item_Price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical|start"
-                android:textAllCaps="true"
                 android:text="100,1000"
-                android:textStyle="italic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:textAllCaps="true"
+                android:textStyle="italic" />
+
+
 
         </LinearLayout>
 
-        <ImageView
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginRight="16dp"
-            android:id="@+id/cart_item_count"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
+        <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+            android:layout_width="75dp"
+            android:layout_height="40dp"
+            android:id="@+id/btn_quantity"
+            android:layout_margin="8dp"
 
+            app:textSize="8sp"
+            app:backGroundColor="@color/colorPrimary"
+            app:initialNumber="1"
+            app:finalNumber="20"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

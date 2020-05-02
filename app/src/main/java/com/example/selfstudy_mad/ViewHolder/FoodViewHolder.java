@@ -12,8 +12,8 @@ import com.example.selfstudy_mad.R;
 
 public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-    public TextView txtfoodName;
-    public ImageView foodimageView;
+    public TextView txtfoodName,txtfoodPrice;
+    public ImageView foodimageView,fav_image,quickaddcart;
     private ItemClickListener itemClickListener;
 
 
@@ -26,6 +26,9 @@ public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         super(itemView);
         txtfoodName=(TextView)itemView.findViewById(R.id.food_name);
         foodimageView=(ImageView)itemView.findViewById(R.id.food_image);
+        txtfoodPrice=(TextView)itemView.findViewById(R.id.food_price);
+      //  fav_image=(ImageView)itemView.findViewById(R.id.fav);
+        quickaddcart=(ImageView)itemView.findViewById(R.id.addcart);
 
         itemView.setOnClickListener(this);
     }
