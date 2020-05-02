@@ -70,6 +70,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     RecyclerView.LayoutManager layoutManager;
     CounterFab fab;
 
+    //namaskara
     //Slider
     HashMap<String,String>image_list;
     SliderLayout mSlider;
