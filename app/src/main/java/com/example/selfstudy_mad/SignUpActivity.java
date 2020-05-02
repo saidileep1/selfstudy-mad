@@ -54,7 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (common.isConnectedToInternet(getBaseContext())){
                 final ProgressDialog mDialog = new ProgressDialog(SignUpActivity.this);
-                mDialog.setMessage("Please Wating...");
+                mDialog.setMessage("Please Waiting...");
                 mDialog.show();
                 if (edtName.length()==0 ||edtPassword.length()==0||edtPhone.length()==0)
                 {
@@ -87,8 +87,8 @@ public class SignUpActivity extends AppCompatActivity {
                                             );
                                     table_user.child(edtPhone.getText().toString()).setValue(user);
                                     Toast.makeText(SignUpActivity.this, "Sign Up Successfully !", Toast.LENGTH_SHORT).show();
-
-                                    finish();
+//////////Send it to Home Page/////////////////
+                                    finish();//////////
                                 }
                             }
                             @Override

@@ -30,7 +30,7 @@ public class SignInActivity extends AppCompatActivity {
     EditText edtPhone, edtPassword;
     Button btnSignIn;
     CheckBox btncheckbox;
-    TextView txtForgotpassword,txtnewuser;
+    TextView txtnewuser;
     EditText s;
 
     FirebaseDatabase database;
