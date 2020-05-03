@@ -136,7 +136,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setHasFixedSize(true);
         //layoutManager=new LinearLayoutManager(this);
         //recycler_menu.setLayoutManager(layoutManager);
-        recycler_menu.setLayoutManager(new GridLayoutManager(this,1));
+        recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
 
         if (common.isConnectedToInternet(getBaseContext()))
             loadMenu();

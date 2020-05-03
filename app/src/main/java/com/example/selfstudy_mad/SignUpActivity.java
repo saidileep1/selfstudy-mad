@@ -83,11 +83,11 @@ public class SignUpActivity extends AppCompatActivity {
 
                                 } else {
                                     mDialog.dismiss();
-                                    User user = new User(edtName.getText().toString(), edtPassword.getText().toString()
-                                            );
+                                    User user = new User(edtName.getText().toString(), edtPassword.getText().toString());
+
                                     table_user.child(edtPhone.getText().toString()).setValue(user);
                                     Toast.makeText(SignUpActivity.this, "Sign Up Successfully !", Toast.LENGTH_SHORT).show();
-//////////Send it to Home Page/////////////////
+
                                     finish();//////////
                                 }
                             }

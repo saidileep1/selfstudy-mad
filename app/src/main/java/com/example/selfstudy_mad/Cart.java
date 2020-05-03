@@ -107,13 +107,29 @@ public class Cart extends AppCompatActivity {
         LayoutInflater inflater=this.getLayoutInflater();
         View order_address_comment=inflater.inflate(R.layout.order_address_comment,null);
 
-        //final MaterialEditText address=(MaterialEditText)order_address_comment.findViewById(R.id.address);
+        final MaterialEditText address=(MaterialEditText)order_address_comment.findViewById(R.id.address);
 
         final MaterialEditText comment=(MaterialEditText)order_address_comment.findViewById(R.id.comment);
-       //gaddress=address.getText().toString();
+
 
         //radio
         final RadioButton homeaddress=(RadioButton) order_address_comment.findViewById(R.id.rdihome);
+        final RadioButton customaddress=(RadioButton)order_address_comment.findViewById(R.id.rdicustom);
+
+        //custom
+        customaddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    address.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
+
+
+
         //addrdi address
         homeaddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -125,6 +141,7 @@ public class Cart extends AppCompatActivity {
                         Toast.makeText(Cart.this,"Please add your address!",Toast.LENGTH_SHORT).show();
                     else
                         haddress=common.currentUser.getHomeaddress();
+                    address.setVisibility(View.INVISIBLE);
                 }
             }
         });
@@ -141,7 +158,7 @@ public class Cart extends AppCompatActivity {
 if (homeaddress.isChecked()){
 
     if (haddress==null){
-        Toast.makeText(Cart.this,"Please Update Your Address",Toast.LENGTH_SHORT).show();
+        Toast.makeText(Cart.this,"Please Update Your Address ",Toast.LENGTH_SHORT).show();
         dialog.dismiss();
     }
     else
@@ -167,6 +184,36 @@ if (homeaddress.isChecked()){
         sendNotificationOrder(order_number);
 
     }
+}
+else if (customaddress.isChecked())
+{
+    if (address.getText().toString().length()>0){
+        Request request = new Request(
+                common.currentUser.getPhone(),
+                common.currentUser.getName(),
+                address.getText().toString(),
+                txtTotalPrice.getText().toString(),
+                "0",
+                comment.getText().toString(),
+                cart
+        );
+
+
+        //Submit to Firebase
+        //Using Sytem.currentmilli to key
+        String order_number=String.valueOf(System.currentTimeMillis());
+        requests.child(order_number).setValue(request);
+        //Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
+        //finish();
+        new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
+        sendNotificationOrder(order_number);
+
+    }
+    else if(address.getText().toString().length()==0)
+        Toast.makeText(Cart.this,"Please enter the address!",Toast.LENGTH_SHORT).show();
+
+
+
 }
 else{
     Toast.makeText(Cart.this,"Please select the Address!",Toast.LENGTH_SHORT).show();

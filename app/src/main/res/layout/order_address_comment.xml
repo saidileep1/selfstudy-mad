@@ -13,13 +13,40 @@
            android:padding="18dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/address"
+                android:hint="Address"
+                android:textColorHint="@color/colorPrimary"
+                android:textColor="@color/colorPrimary"
+                android:textSize="34sp"
+                android:inputType="text"
+                android:visibility="invisible"
+                app:met_baseColor="@color/colorPrimary"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/colorPrimary"
+                app:met_singleLineEllipsis="true"
+                />
+<RadioGroup
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/groupradio">
             <RadioButton
                 android:id="@+id/rdihome"
                 android:layout_width="338dp"
-                android:layout_height="104dp"
-                android:layout_margin="20dp"
+                android:layout_height="80dp"
+                android:layout_margin="10dp"
                 android:text="Use Home Address" />
+    <RadioButton
+        android:id="@+id/rdicustom"
+        android:layout_width="338dp"
+        android:layout_height="80dp"
+        android:layout_margin="10dp"
+        android:text="Type new  Address" />
+
+
+</RadioGroup>
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
