@@ -217,6 +217,7 @@ public class FoodList extends AppCompatActivity {
        if (adapter!=null)
            adapter.startListening();
     }
+    ////COOMOMOC
 
     private void loadListFood(final String categoryId) {
         Query searchbyid=foodlist.orderByChild("menuid").equalTo(categoryId);
