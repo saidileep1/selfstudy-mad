@@ -66,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
                 {
                     if (edtPhone.length()<10||edtPhone.length()>10){
                         mDialog.dismiss();
-                        Toast.makeText(SignUpActivity.this, "Please enter the proper number !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this, "Please Enter a Valid Number !", Toast.LENGTH_SHORT).show();
 
                     }
                     else {

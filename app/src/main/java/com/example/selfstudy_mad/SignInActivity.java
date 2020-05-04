@@ -75,7 +75,6 @@ public class SignInActivity extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (common.isConnectedToInternet(getBaseContext())){
 
 
@@ -93,40 +92,44 @@ public class SignInActivity extends AppCompatActivity {
 
 
 
+                if (edtPassword.length()==0||edtPhone.length()==0)
+                {
+                    mDialog.dismiss();
+                    Toast.makeText(SignInActivity.this, "Please enter the details !", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    table_user.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            //check if user not in db
+                            if (dataSnapshot.child(edtPhone.getText().toString()).exists()) {
+                                //get user inf0
+                                mDialog.dismiss();
+                                User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
+                                user.setPhone(edtPhone.getText().toString());
+                                if (user.getPassword().equals(edtPassword.getText().toString())) {
+                                    Intent homeIntent = new Intent(SignInActivity.this, Home.class);
+                                    common.currentUser = user;
+                                    common.loggedin = "y";
+                                    startActivity(homeIntent);
+                                    finish();
 
-                table_user.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    //check if user not in db
-                        if(dataSnapshot.child(edtPhone.getText().toString()).exists()) {
-                            //get user inf0
-                            mDialog.dismiss();
-                            User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
-                            user.setPhone(edtPhone.getText().toString());
-                            if (user.getPassword().equals(edtPassword.getText().toString())) {
-                                Intent homeIntent=new Intent(SignInActivity.this,Home.class);
-                                common.currentUser=user;
-                                common.loggedin="y";
-                                startActivity(homeIntent);
-                                finish();
-
-                                table_user.removeEventListener(this);
+                                    table_user.removeEventListener(this);
+                                } else {
+                                    Toast.makeText(SignInActivity.this, "Wrong pasword", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Toast.makeText(SignInActivity.this, "Wrong pasword", Toast.LENGTH_SHORT).show();
+                                mDialog.dismiss();
+                                Toast.makeText(SignInActivity.this, "User does not Exist;New User?Please register first", Toast.LENGTH_SHORT).show();
                             }
                         }
-                        else
-                        {
-                            mDialog.dismiss();
-                            Toast.makeText(SignInActivity.this,"User does not Exist;New User?Please register first",Toast.LENGTH_SHORT).show();
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                    });
+                }
             }
                 else
                 {

@@ -68,6 +68,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Nav
         drawerLayout=findViewById(R.id.drawer_layout);
         navigationView=findViewById(R.id.nav_view);
         toolbar=findViewById(R.id.toolbar);
+        toolbar.setTitle("The Corridor");
         //--------------------------Toolbar-------------------------------
         setSupportActionBar(toolbar);
         //--------------------------Navigation View----------------------------------------------------

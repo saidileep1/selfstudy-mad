@@ -31,11 +31,14 @@ public class common{
     public static String convertCodeTOStatus(String status){
         if (status.equals("0"))
             return "Placed";
-        else if (status.equals("1"))
+        else if(status.equals("1"))
+            return "Confirmed";
+        else if (status.equals("2"))
             return "On the Way";
+        else if(status.equals("3"))
+            return "Cancelled";
         else
             return "Delivered";
-
     }
 
     public static boolean isConnectedToInternet(Context context)
