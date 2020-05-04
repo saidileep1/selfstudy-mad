@@ -51,19 +51,19 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 intent = new Intent(MainActivity.this, SignInActivity.class);   //Switch to Dashboard
                 startActivity(intent);
-
-                String user = Paper.book().read(common.USER_KEY);
-                String pwd = Paper.book().read(common.PWD_KEY);
-
-                if (user != null && pwd != null) {
-                    if (!user.isEmpty() && !pwd.isEmpty()) {
-                        login(user, pwd);
-                    }
-                }
-
-
             }
         }, 2000);
+        String user = Paper.book().read(common.USER_KEY);
+        String pwd = Paper.book().read(common.PWD_KEY);
+
+        if (user != null && pwd != null) {
+            if (!user.isEmpty() && !pwd.isEmpty()) {
+                login(user, pwd);
+            }
+        }
+
+
+
     }
 
 /*
