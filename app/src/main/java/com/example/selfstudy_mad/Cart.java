@@ -132,10 +132,7 @@ public class Cart extends AppCompatActivity {
                 }
             }
         });
-
-
-
-        //addrdi address
+        
         homeaddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -282,13 +279,10 @@ else{
                                 @Override
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
 
-                                    //order_msg=findViewById(R.id.success_msg);
                                         if (response.body().success == 1) {
-                                            //order_msg.setText("Order Placed !! Server has been Notified");
                                             Toast.makeText(Cart.this, "Thank You! Your Order Placed!", Toast.LENGTH_SHORT).show();
                                             finish();
                                         } else {
-                                            //order_msg.setText("Order Placed !! Waiting for Server to come online");
                                             Toast.makeText(Cart.this, "Order Successful, waiting for Server", Toast.LENGTH_SHORT).show();
                                             finish();
                                         }/*
@@ -303,8 +297,6 @@ else{
                                         });*/
 
                                 }
-
-
                                 @Override
                                 public void onFailure(Call<MyResponse> call, Throwable t) {
 
@@ -358,7 +350,6 @@ else{
         //update new data from sqlite
         for (Order item:cart)
             new Database(this).addToCart(item);
-        //refresh acivity
         loadListFood();
     }
 }
