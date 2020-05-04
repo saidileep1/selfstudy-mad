@@ -30,7 +30,6 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<MyViewHolder> {
     public OrderDetailAdapter(List<Order> myOrder) {
         this.myOrder = myOrder;
     }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

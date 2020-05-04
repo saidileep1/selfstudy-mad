@@ -46,6 +46,5 @@ public class OrderDetails extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
         listFoods.setAdapter(adapter);
-
     }
 }

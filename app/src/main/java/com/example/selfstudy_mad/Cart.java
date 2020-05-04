@@ -10,13 +10,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,14 +61,18 @@ public class Cart extends AppCompatActivity {
 
     public TextView txtTotalPrice;
     Button btnPlace;
-    List<Order> cart=new ArrayList<>();
+    List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
     APIService mService;
     Dialog msg;
     Button closedialog;
     TextView order_msg;
+    ImageView i;
+    TextView empty_msg,order_t;
+    ScrollView s;
+    CardView c;
 
-   public String haddress,gaddress;
+    public String haddress, gaddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,60 +80,106 @@ public class Cart extends AppCompatActivity {
         setContentView(R.layout.activity_cart);
 
         //Init Service
-        mService=common.getFCMService();
+        mService = common.getFCMService();
 
         //Firebase
-        database =FirebaseDatabase.getInstance();
-        requests=database.getReference("Requests");
+        database = FirebaseDatabase.getInstance();
+        requests = database.getReference("Requests");
 
         //Init
-        recyclerView=(RecyclerView)findViewById(R.id.listCart);
+        recyclerView = (RecyclerView) findViewById(R.id.listCart);
         recyclerView.setHasFixedSize(true);
-        layoutManager=new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        msg=new Dialog(this);
-        txtTotalPrice=(TextView)findViewById(R.id.total);
-        btnPlace=(Button)findViewById(R.id.btnPlaceOrder);
+        i=findViewById(R.id.cart_i);
+        empty_msg=findViewById(R.id.cart_t);
 
+        msg = new Dialog(this);
+        txtTotalPrice = (TextView) findViewById(R.id.total);
+        btnPlace = (Button) findViewById(R.id.btnPlaceOrder);
+        s=findViewById(R.id.cart_scroll);
+        order_t=findViewById(R.id.textView_cart);
+        c=findViewById(R.id.cart_b);
+
+        if(cart.isEmpty())
+        {
+            i.setVisibility(View.VISIBLE);
+            empty_msg.setVisibility(View.VISIBLE);
+            s.setVisibility(View.GONE);
+            order_t.setVisibility(View.GONE);
+            c.setVisibility(View.GONE);
+        }
+        else
+        {
+            i.setVisibility(View.GONE);
+            empty_msg.setVisibility(View.GONE);
+            s.setVisibility(View.VISIBLE);
+            order_t.setVisibility(View.VISIBLE);
+            c.setVisibility(View.VISIBLE);
+        }
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (cart.size()>0)
+                if (cart.size() > 0)
                     showAlertDialog();
                 else
-                    Toast.makeText(Cart.this,"Your Cart is Empty!!",Toast.LENGTH_SHORT).show();
-                }
+                    Toast.makeText(Cart.this, "Your Cart is Empty!!", Toast.LENGTH_SHORT).show();
+            }
         });
-
         loadListFood();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(cart.isEmpty())
+        {
+            i.setVisibility(View.VISIBLE);
+            empty_msg.setVisibility(View.VISIBLE);
+            s.setVisibility(View.GONE);
+            order_t.setVisibility(View.GONE);
+            c.setVisibility(View.GONE);
+        }
+        else
+        {
+            i.setVisibility(View.GONE);
+            empty_msg.setVisibility(View.GONE);
+            s.setVisibility(View.VISIBLE);
+            order_t.setVisibility(View.VISIBLE);
+            c.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
     }
 
     private void showAlertDialog() {
-        AlertDialog.Builder alertDialog=new AlertDialog.Builder(Cart.this);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Cart.this);
         alertDialog.setTitle("One more step!");
         alertDialog.setMessage("Enter your Address");
 
-        LayoutInflater inflater=this.getLayoutInflater();
-        View order_address_comment=inflater.inflate(R.layout.order_address_comment,null);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
 
-        final MaterialEditText address=(MaterialEditText)order_address_comment.findViewById(R.id.address);
+        final MaterialEditText address = (MaterialEditText) order_address_comment.findViewById(R.id.address);
 
-        final MaterialEditText comment=(MaterialEditText)order_address_comment.findViewById(R.id.comment);
+        final MaterialEditText comment = (MaterialEditText) order_address_comment.findViewById(R.id.comment);
 
 
         //radio
-        final RadioButton homeaddress=(RadioButton) order_address_comment.findViewById(R.id.rdihome);
-        final RadioButton customaddress=(RadioButton)order_address_comment.findViewById(R.id.rdicustom);
+        final RadioButton homeaddress = (RadioButton) order_address_comment.findViewById(R.id.rdihome);
+        final RadioButton customaddress = (RadioButton) order_address_comment.findViewById(R.id.rdicustom);
 
         //custom
         customaddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
+                if (isChecked) {
                     address.setVisibility(View.VISIBLE);
 
                 }
@@ -136,20 +189,16 @@ public class Cart extends AppCompatActivity {
         homeaddress.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    if (TextUtils.isEmpty(common.currentUser.getHomeaddress())||
-                    common.currentUser.getHomeaddress()==null)
-                        Toast.makeText(Cart.this,"Please add your address!",Toast.LENGTH_SHORT).show();
+                if (isChecked) {
+                    if (TextUtils.isEmpty(common.currentUser.getHomeaddress()) ||
+                            common.currentUser.getHomeaddress() == null)
+                        Toast.makeText(Cart.this, "Please add your address!", Toast.LENGTH_SHORT).show();
                     else
-                        haddress=common.currentUser.getHomeaddress();
+                        haddress = common.currentUser.getHomeaddress();
                     address.setVisibility(View.INVISIBLE);
                 }
             }
         });
-
-
-
 
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
@@ -157,94 +206,62 @@ public class Cart extends AppCompatActivity {
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-if (homeaddress.isChecked()){
+                if (homeaddress.isChecked()) {
 
-    if (haddress==null){
-        Toast.makeText(Cart.this,"Please Update Your Address ",Toast.LENGTH_SHORT).show();
-        dialog.dismiss();
-    }
-    else
-    {
-        Request request = new Request(
-                common.currentUser.getPhone(),
-                common.currentUser.getName(),
-                haddress,
-                txtTotalPrice.getText().toString(),
-                "0",
-                comment.getText().toString(),
-                cart
-        );
+                    if (haddress == null) {
+                        Toast.makeText(Cart.this, "Please Update Your Address ", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    } else {
+                        Request request = new Request(
+                                common.currentUser.getPhone(),
+                                common.currentUser.getName(),
+                                haddress,
+                                txtTotalPrice.getText().toString(),
+                                "0",
+                                comment.getText().toString(),
+                                cart
+                        );
 
 
-        //Submit to Firebase
-        //Using Sytem.currentmilli to key
-        String order_number=String.valueOf(System.currentTimeMillis());
-        requests.child(order_number).setValue(request);
-        //Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
-        //finish();
-        new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
-        sendNotificationOrder(order_number);
+                        //Submit to Firebase
+                        //Using Sytem.currentmilli to key
+                        String order_number = String.valueOf(System.currentTimeMillis());
+                        requests.child(order_number).setValue(request);
+                        //Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
+                        //finish();
+                        new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
+                        sendNotificationOrder(order_number);
 
-    }
-}
-else if (customaddress.isChecked())
-{
-    if (address.getText().toString().length()>0){
-        Request request = new Request(
-                common.currentUser.getPhone(),
-                common.currentUser.getName(),
-                address.getText().toString(),
-                txtTotalPrice.getText().toString(),
-                "0",
-                comment.getText().toString(),
-                cart
-        );
+                    }
+                } else if (customaddress.isChecked()) {
+                    if (address.getText().toString().length() > 0) {
+                        Request request = new Request(
+                                common.currentUser.getPhone(),
+                                common.currentUser.getName(),
+                                address.getText().toString(),
+                                txtTotalPrice.getText().toString(),
+                                "0",
+                                comment.getText().toString(),
+                                cart
+                        );
 
 
-        //Submit to Firebase
-        //Using Sytem.currentmilli to key
-        String order_number=String.valueOf(System.currentTimeMillis());
-        requests.child(order_number).setValue(request);
-        //Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
-        //finish();
-        new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
-        sendNotificationOrder(order_number);
+                        //Submit to Firebase
+                        //Using Sytem.currentmilli to key
+                        String order_number = String.valueOf(System.currentTimeMillis());
+                        requests.child(order_number).setValue(request);
+                        //Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
+                        //finish();
+                        new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
+                        sendNotificationOrder(order_number);
 
-    }
-    else if(address.getText().toString().length()==0)
-        Toast.makeText(Cart.this,"Please enter the address!",Toast.LENGTH_SHORT).show();
-
+                    } else if (address.getText().toString().length() == 0)
+                        Toast.makeText(Cart.this, "Please enter the address!", Toast.LENGTH_SHORT).show();
 
 
-}
-else{
-    Toast.makeText(Cart.this,"Please select the Address!",Toast.LENGTH_SHORT).show();
-}
-
-
-
-/*else {                Request request = new Request(
-                            common.currentUser.getPhone(),
-                            common.currentUser.getName(),
-                            haddress,
-                            txtTotalPrice.getText().toString(),
-                            "0",
-                            comment.getText().toString(),
-                            cart
-                    );
-
-
-                //Submit to Firebase
-                //Using Sytem.currentmilli to key
-                String order_number=String.valueOf(System.currentTimeMillis());
-                requests.child(order_number).setValue(request);
-                //Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
-                //finish();
-                new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
-               sendNotificationOrder(order_number);}*/
-
-
-
+                } else {
+                    Toast.makeText(Cart.this, "Please select the Address!", Toast.LENGTH_SHORT).show();
+                }
             }
 
         });
@@ -261,31 +278,30 @@ else{
     }
 
     private void sendNotificationOrder(final String order_number) {
-        DatabaseReference tokens =FirebaseDatabase.getInstance().getReference("Token");
-        Query data=tokens.orderByChild("isServerToken").equalTo(true);
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Token");
+        Query data = tokens.orderByChild("isServerToken").equalTo(true);
         data.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot postSnapShot:dataSnapshot.getChildren())
-                {
-                    Token serverToken=postSnapShot.getValue(Token.class);
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+                    Token serverToken = postSnapShot.getValue(Token.class);
                     //
-                    Notification notification=new Notification("APP","You have new Order"+order_number);
-                    Sender content=new Sender(serverToken.getToken(),notification);
+                    Notification notification = new Notification("APP", "You have new Order" + order_number);
+                    Sender content = new Sender(serverToken.getToken(), notification);
 
                     mService.sendNotification(content)
                             .enqueue(new Callback<MyResponse>() {
                                 @Override
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
 
-                                        if (response.body().success == 1) {
-                                            Toast.makeText(Cart.this, "Thank You! Your Order Placed!", Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        } else {
-                                            Toast.makeText(Cart.this, "Order Successful, waiting for Server", Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        }/*
+                                    if (response.body().success == 1) {
+                                        Toast.makeText(Cart.this, "Thank You! Your Order Placed!", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    } else {
+                                        Toast.makeText(Cart.this, "Order Successful, waiting for Server", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }/*
                                         msg.setContentView(R.layout.cart_layout);
                                         closedialog=findViewById(R.id.close_dialog);
                                         closedialog.setOnClickListener(new View.OnClickListener() {
@@ -297,10 +313,11 @@ else{
                                         });*/
 
                                 }
+
                                 @Override
                                 public void onFailure(Call<MyResponse> call, Throwable t) {
 
-                                    Log.e("ERROR",t.getMessage());
+                                    Log.e("ERROR", t.getMessage());
                                 }
                             });
 
@@ -316,18 +333,18 @@ else{
     }
 
     private void loadListFood() {
-        cart=new Database(this).getCarts(common.currentUser.getPhone());
-        adapter=new CartAdapter(cart,this);
+        cart = new Database(this).getCarts(common.currentUser.getPhone());
+        adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
 //Calculate total Price
-        int total=0;
-        for (Order order:cart)
-            total+=(Integer.parseInt(order.getPrice()))*(Integer.parseInt(order.getQuantity()));
+        int total = 0;
+        for (Order order : cart)
+            total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
 
-        Locale locale=new Locale("en","IN");
-        NumberFormat fmt=NumberFormat.getCurrencyInstance(locale);
+        Locale locale = new Locale("en", "IN");
+        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
         txtTotalPrice.setText(fmt.format(total));
     }
@@ -335,21 +352,36 @@ else{
     //Location
 
     @Override
-    public boolean onContextItemSelected( MenuItem item) {
+    public boolean onContextItemSelected(MenuItem item) {
         if (item.getTitle().equals(common.DELETE))
             deleteCart(item.getOrder());
         return true;
     }
 
-    private void deleteCart(int position)
-    {
+    private void deleteCart(int position) {
         //we will remove item by position in order
         cart.remove(position);
         //We will delete all old data fromsqlite
         new Database(this).cleanCart(common.currentUser.getPhone());
         //update new data from sqlite
-        for (Order item:cart)
+        for (Order item : cart)
             new Database(this).addToCart(item);
         loadListFood();
+        if(cart.isEmpty())
+        {
+            i.setVisibility(View.VISIBLE);
+            empty_msg.setVisibility(View.VISIBLE);
+            s.setVisibility(View.GONE);
+            order_t.setVisibility(View.GONE);
+            c.setVisibility(View.GONE);
+        }
+        else
+        {
+            i.setVisibility(View.GONE);
+            empty_msg.setVisibility(View.GONE);
+            s.setVisibility(View.VISIBLE);
+            order_t.setVisibility(View.VISIBLE);
+            c.setVisibility(View.VISIBLE);
+        }
     }
 }
