@@ -22,7 +22,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="34sp"
                 android:inputType="text"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:met_baseColor="@color/colorPrimary"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/colorPrimary"
@@ -36,13 +36,13 @@
                 android:id="@+id/rdihome"
                 android:layout_width="338dp"
                 android:layout_height="80dp"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:text="Use Home Address" />
     <RadioButton
         android:id="@+id/rdicustom"
         android:layout_width="338dp"
         android:layout_height="80dp"
-        android:layout_margin="10dp"
+        android:layout_margin="5dp"
         android:text="Type new  Address" />
 
 
@@ -62,12 +62,6 @@
                 app:met_singleLineEllipsis="true"
                 />
 
-
-
         </LinearLayout>
-
-
-
-
 
 </androidx.cardview.widget.CardView>
