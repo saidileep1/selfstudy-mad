@@ -106,13 +106,13 @@ public class SignInActivity extends AppCompatActivity {
                             if (user.getPassword().equals(edtPassword.getText().toString())) {
                                 Intent homeIntent=new Intent(SignInActivity.this,Home.class);
                                 common.currentUser=user;
+                                common.loggedin="y";
                                 startActivity(homeIntent);
                                 finish();
 
                                 table_user.removeEventListener(this);
                             } else {
                                 Toast.makeText(SignInActivity.this, "Wrong pasword", Toast.LENGTH_SHORT).show();
-
                             }
                         }
                         else

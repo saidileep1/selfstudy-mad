@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.selfstudy_mad.Model.User;
@@ -30,8 +31,8 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-   edtPhone = findViewById(R.id.phnum);
-      edtName = findViewById(R.id.name);
+       edtPhone = findViewById(R.id.phnum);
+       edtName = findViewById(R.id.name);
        edtPassword = findViewById(R.id.pwd);
         //edtsecure=findViewById(R.id.secure);
 
@@ -76,24 +77,27 @@ public class SignUpActivity extends AppCompatActivity {
                                 //check if user not exist in database
 
                                 if (dataSnapshot.child(edtPhone.getText().toString()).exists()) {
-                                    //get user information
-                                    mDialog.dismiss();
-                                    User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
-                                    Toast.makeText(SignUpActivity.this, "Phone number already registered !", Toast.LENGTH_SHORT).show();
-
+                                    if(common.loggedin.equals("n")) {
+                                        mDialog.dismiss();
+                                        User user = dataSnapshot.child(edtPhone.getText().toString()).getValue(User.class);
+                                        Toast s = Toast.makeText(SignUpActivity.this, "Phone number already registered !", Toast.LENGTH_SHORT);
+                                        s.show();
+                                    }
                                 } else {
                                     mDialog.dismiss();
                                     User user = new User(edtName.getText().toString(), edtPassword.getText().toString());
-
+                                    user.setPhone(edtPhone.getText().toString());
                                     table_user.child(edtPhone.getText().toString()).setValue(user);
                                     Toast.makeText(SignUpActivity.this, "Sign Up Successfully !", Toast.LENGTH_SHORT).show();
-
-                                    finish();//////////
+                                    Intent homeIntent=new Intent(SignUpActivity.this,Home.class);
+                                    common.currentUser=user;
+                                    common.loggedin="y";
+                                    startActivity(homeIntent);
+                                    finish();
                                 }
                             }
                             @Override
                             public void onCancelled (DatabaseError databaseError){
-
                             }
                         });
                     }

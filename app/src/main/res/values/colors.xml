@@ -10,4 +10,18 @@
     <color name="btnSignUp">#39796b</color>
     <color name="btnSignUpActive">#A9d440</color>
     <color name="bgRowBackground">#FA315B</color>
+
+//changes by Rounak
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="red">#db3514</color>
+
+    <color name="mustard">#ffaf2f</color>
+    <color name="green">#1ED825</color>
+
+
+
+
+
+
 </resources>

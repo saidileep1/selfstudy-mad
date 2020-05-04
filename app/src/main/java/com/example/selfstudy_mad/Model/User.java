@@ -15,7 +15,6 @@ public class User {
         this.name = name;
         this.password = password;
         this.admin="false";
-
     }
 
     public void setAdmin(String admin) {

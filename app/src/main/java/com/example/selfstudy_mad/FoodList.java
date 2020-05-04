@@ -8,18 +8,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.selfstudy_mad.Database.Database;
 import com.example.selfstudy_mad.Interface.ItemClickListener;
 import com.example.selfstudy_mad.Model.Food;
+import com.example.selfstudy_mad.Model.Food1;
 import com.example.selfstudy_mad.Model.Order;
-import com.example.selfstudy_mad.ViewHolder.FoodViewHolder;
+import com.example.selfstudy_mad.ViewHolder.FoodHolder;
 import com.example.selfstudy_mad.common.common;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -34,6 +39,245 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+import androidx.core.content.ContextCompat;
+import android.widget.Button;
+
+public class FoodList extends AppCompatActivity implements View.OnClickListener{
+
+    //ListView list;
+    //Myadapter myadap;
+    Integer category;
+    /*ArrayList<String> title=new ArrayList<>();
+    ArrayList<String> price=new ArrayList<>();
+    */
+    RecyclerView recyclerView;
+    Button b;
+    Integer pressed;
+    Button previous;
+    FirebaseDatabase database;
+    DatabaseReference ref;
+    Switch veg;
+    //FoodAdapter adapter;
+    FirebaseRecyclerAdapter<Food1, FoodHolder>adapter;
+    String categoryid="";
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_food_list);
+        //  list=findViewById(R.id.items);
+        //  myadap= new Myadapter();
+
+        recyclerView=findViewById(R.id.items);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        database=FirebaseDatabase.getInstance();
+        ref=database.getReference("Food1");
+        /*FirebaseRecyclerOptions<Food> options =
+                new FirebaseRecyclerOptions.Builder<Food>()
+                        .setQuery(ref.child("Food"), Food.class)
+                        .build();
+*/
+        /*adapter=new FoodAdapter(options);
+        recyclerView.setAdapter(adapter);
+*/
+        veg=findViewById(R.id.veg);
+        //Get Category clicked
+        Intent intent= getIntent();
+        category=intent.getIntExtra(Home.EXTRA_category, 0);
+        //set selected button
+        switch (category)
+        {
+            case R.id.img_pizza:
+                b=findViewById(R.id.Pizza);
+                categoryid="02";
+                break;
+            case R.id.img_pasta:
+                b=findViewById(R.id.Pasta);
+                categoryid="03";
+                break;
+            case R.id.img_burger:
+                b=findViewById(R.id.Burger);
+                categoryid="01";
+                break;
+            case R.id.img_sides:
+                b=findViewById(R.id.Sides);
+                categoryid="06";
+                break;
+            case R.id.img_dessert:
+                b=findViewById(R.id.Dessert);
+                categoryid="04";
+                break;
+            case R.id.img_beverages:
+                b=findViewById(R.id.Beverages);
+                categoryid="05";
+                break;
+        }
+        b.setBackgroundResource(R.drawable.round_btn_menu_black);
+        b.setTextColor(ContextCompat.getColor(this,R.color.white));
+        previous = b;
+
+        loadListFood(categoryid);
+
+    }
+    @Override
+    public void onClick(View v) {
+        pressed = v.getId();
+        switch (pressed)
+        {
+            case R.id.Pizza:
+                categoryid="02";
+                break;
+            case R.id.Pasta:
+                categoryid="03";
+                break;
+            case R.id.Burger:
+                categoryid="01";
+                break;
+            case R.id.Sides:
+                categoryid="06";
+                break;
+            case R.id.Dessert:
+                categoryid="04";
+                break;
+            case R.id.Beverages:
+                categoryid="05";
+                break;
+        }
+        b=findViewById(pressed);
+        b.setBackgroundResource(R.drawable.round_btn_menu_black);
+        b.setTextColor(ContextCompat.getColor(this,R.color.white));
+
+        previous.setBackgroundResource(R.drawable.round_btn_menu_white);
+        previous.setTextColor(ContextCompat.getColor(this,R.color.black));
+        previous=b;
+
+        //load it's menu
+        loadListFood(categoryid);
+    }
+
+    private void loadListFood(final String categoryId) {
+        Query searchbyid;
+        if(veg.isChecked()) {
+            searchbyid = ref.orderByChild("menuid").equalTo(categoryId).orderByChild("veg").equalTo("y");
+        }
+        else
+            searchbyid = ref.orderByChild("menuid").equalTo(categoryId);
+        FirebaseRecyclerOptions<Food1> options=new FirebaseRecyclerOptions.Builder<Food1>()
+                .setQuery(searchbyid,Food1.class)
+                .build();
+
+        adapter =new FirebaseRecyclerAdapter<Food1, FoodHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull final FoodHolder foodHolder, final int i, @NonNull final Food1 food1) {
+                foodHolder.name.setText(food1.getName());
+                foodHolder.price.setText(String.format("Rs. %s", food1.getPrice()));
+                Picasso.with(getBaseContext()).load(food1.getImage())
+                        .into(foodHolder.image);
+                veg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                    notifyDataSetChanged();
+                    }
+                });
+
+
+
+                //Add to Cart
+                final boolean isExists = new Database(getBaseContext()).checkFoodExists(adapter.getRef(i).getKey(), common.currentUser.getPhone());
+                if (!isExists)
+                {
+                    foodHolder.add.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new Database(getBaseContext()).addToCart(new Order(
+                                    common.currentUser.getPhone(),
+                                    adapter.getRef(i).getKey(),
+                                    food1.getName(),
+                                    "1",
+                                    food1.getPrice(),
+                                    food1.getImage()
+                            ));
+                            Toast.makeText(FoodList.this, "ADDED TO CART", Toast.LENGTH_SHORT).show();
+                        }
+                    });}
+            }
+
+            @NonNull
+            @Override
+            public FoodHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View itemView= LayoutInflater.from(parent.getContext())
+                        .inflate( R.layout.item_cards,parent,false);
+                return new FoodHolder(itemView);
+            }
+        };
+        //set Adapter
+        Log.d("TAG",""+adapter.getItemCount());
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adapter!=null)
+            adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+        /*if(searchadapter!=null)
+            searchadapter.stopListening();
+    */
+
+
+}
+/*
+
+    class Myadapter extends BaseAdapter
+    {
+        @Override
+        public int getCount() {
+            return title.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View v= LayoutInflater.from(getApplicationContext()).inflate(R.layout.item_cards,null);
+            TextView t = v.findViewById(R.id.item_title);
+            TextView p = v.findViewById(R.id.price);
+            ImageView i=v.findViewById(R.id.item_img);
+            i.setImageResource(R.drawable.farmhouse);
+            t.setText(title.get(position));
+            p.setText(price.get(position));
+            return v;
+        }
+    }
+}
+*/
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+/*
+
+
 
 public class FoodList extends AppCompatActivity {
 
@@ -87,9 +331,6 @@ public class FoodList extends AppCompatActivity {
             loadListFood(categoryId);
 
         }
-
-
-
 
 
 
@@ -253,9 +494,11 @@ public class FoodList extends AppCompatActivity {
                                     food.getImage()
                             ));
 
-                         /*   else {
+                         */
+/*   else {
                                 new Database(getBaseContext()).increaseCart(common.currentUser.getPhone(), adapter.getRef(i).getKey());
-                            }*/
+                            }*//*
+
                             Toast.makeText(FoodList.this, "ADDED TO CART", Toast.LENGTH_SHORT).show();
 
                         }
@@ -301,3 +544,4 @@ public class FoodList extends AppCompatActivity {
             searchadapter.stopListening();
     }
 }
+*/

@@ -1,28 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/rootlayout"
     tools:context=".FoodList">
 
-    <com.mancj.materialsearchbar.MaterialSearchBar
-        android:id="@+id/searchBar"
+    <ImageView
+        android:id="@+id/menu_banner"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:background="#ffaf2f"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="?attr/selectableItemBackground" />
+
+    <ImageView
+        android:id="@+id/nav_bar"
+        android:layout_width="41dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/menu_banner"
+        app:layout_constraintTop_toTopOf="@+id/menu_banner"
+        app:srcCompat="@drawable/ic_dehaze_black_24dp" />
+
+    <TextView
+        android:id="@+id/menu_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Menu"
+        android:textColor="@android:color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalScrollView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="@+id/menu_banner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/Pizza"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_btn_menu_white"
+                android:text="Pizza"
+                android:onClick="onClick"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="79dp"
+                tools:layout_editor_absoluteY="72dp" />
+
+            <Button
+                android:id="@+id/Pasta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_btn_menu_white"
+                android:text="Pasta"
+                android:onClick="onClick"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="79dp"
+                tools:layout_editor_absoluteY="72dp" />
+
+            <Button
+                android:id="@+id/Burger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_btn_menu_white"
+                android:text="Burger"
+                android:onClick="onClick"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="79dp"
+                tools:layout_editor_absoluteY="72dp" />
+
+            <Button
+                android:id="@+id/Sides"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_btn_menu_white"
+                android:text="Sides"
+                android:onClick="onClick"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="79dp"
+                tools:layout_editor_absoluteY="72dp" />
+
+            <Button
+                android:id="@+id/Dessert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_btn_menu_white"
+                android:text="Dessert"
+                android:onClick="onClick"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="79dp"
+                tools:layout_editor_absoluteY="72dp" />
+
+            <Button
+                android:id="@+id/Beverages"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/round_btn_menu_white"
+                android:text="Beverages"
+                android:onClick="onClick"
+                android:textStyle="bold"
+                tools:layout_editor_absoluteX="79dp"
+                tools:layout_editor_absoluteY="72dp" />
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/veg_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/items"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/menu_banner">
 
-        android:layout_alignParentTop="true"
-        app:mt_hint="Enter your Food"
-        app:mt_speechMode="false">
-
-
-    </com.mancj.materialsearchbar.MaterialSearchBar>
+        <Switch
+            android:id="@+id/veg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchPadding="10dp"
+            android:text="Veg Only"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_below="@id/searchBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recycler_food"
-        android:scrollbars="vertical"/>
-</RelativeLayout>
+        android:id="@+id/items"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/veg_layout"
+        app:layout_constraintVertical_bias="1.0">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

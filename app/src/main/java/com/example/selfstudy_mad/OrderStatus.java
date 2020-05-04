@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +31,7 @@ public class OrderStatus extends AppCompatActivity {
     public RecyclerView.LayoutManager layoutManager;
     FirebaseDatabase database;
     DatabaseReference requests;
-
+    RelativeLayout relativeLayout;
     FirebaseRecyclerAdapter<Request, OrderViewHolder>adapter;
 
     @Override
@@ -50,6 +52,7 @@ public class OrderStatus extends AppCompatActivity {
 
         //if we start Orderactivity from Home activity
         //We will no tput any extra,so we just load order by phone from Common
+
         if (getIntent().getExtras()==null) {
             loadOrders(common.currentUser.getPhone());
         }
@@ -60,7 +63,7 @@ public class OrderStatus extends AppCompatActivity {
 
         Query getOrderByUser=requests.orderByChild("phone")
                 .equalTo(phone);
-        FirebaseRecyclerOptions<Request> options=new FirebaseRecyclerOptions.Builder<Request>()
+        final FirebaseRecyclerOptions<Request> options=new FirebaseRecyclerOptions.Builder<Request>()
                 .setQuery(getOrderByUser,Request.class)
                 .build();
 

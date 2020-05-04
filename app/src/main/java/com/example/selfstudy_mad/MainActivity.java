@@ -6,7 +6,9 @@ import android.graphics.Typeface;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,18 +23,50 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import io.paperdb.Paper;
 
 public class MainActivity extends AppCompatActivity {
 
+
+    //Variable Definition
     Button btnSignIn, btnSignUp;
     TextView txtSlogan;
+    Timer timer;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Introduction Activity(Application starts here)
+        Paper.init(this);
 
+        timer = new Timer();         //Create timer obj
+        //To automatically switch activity after timer over
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                intent = new Intent(MainActivity.this, SignInActivity.class);   //Switch to Dashboard
+                startActivity(intent);
+
+                String user = Paper.book().read(common.USER_KEY);
+                String pwd = Paper.book().read(common.PWD_KEY);
+
+                if (user != null && pwd != null) {
+                    if (!user.isEmpty() && !pwd.isEmpty()) {
+                        login(user, pwd);
+                    }
+                }
+
+
+            }
+        }, 2000);
+    }
+
+/*
         btnSignIn =  findViewById(R.id.signin);
         btnSignUp = findViewById(R.id.signup);
 
@@ -57,41 +91,25 @@ public class MainActivity extends AppCompatActivity {
                 Intent signup = new Intent (MainActivity.this, SignUpActivity.class);
                 startActivity(signup);
             }
-        });
+        });*/
 
         //Check Remeber is checked or not
-        String user=Paper.book().read(common.USER_KEY);
-        String pwd=Paper.book().read(common.PWD_KEY);
-        
-        if (user !=null && pwd !=null)
-        {
-            if (!user.isEmpty()&&!pwd.isEmpty())
-                login(user,pwd);
-        }
 
-    }
     //Init Firebase
     final FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference table_user = database.getReference("User");
 
-
-
     private void login(final String phone, final String pwd) {
         //save user and password
 
-
         final ProgressDialog mDialog = new ProgressDialog(MainActivity.this);
-        mDialog.setMessage("please wait...");
+        mDialog.setMessage("Please wait...");
         mDialog.show();
-
-
-
 
         table_user.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //check if user not in db
-
                 if(dataSnapshot.child(phone).exists()) {
                     //get user inf0
                     mDialog.dismiss();
@@ -100,16 +118,21 @@ public class MainActivity extends AppCompatActivity {
                     if (user.getPassword().equals(pwd)) {
                         Intent homeIntent=new Intent(MainActivity.this,Home.class);
                         common.currentUser=user;
+                        common.loggedin="y";
                         startActivity(homeIntent);
                         finish();
                     } else {
-                        Toast.makeText(MainActivity.this, "Wrong pasword", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                        //stay in signin
+                        finish();
                     }
                 }
                 else
                 {
                     mDialog.dismiss();
-                    Toast.makeText(MainActivity.this,"User does not Exist;New User?Please register first",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"User does not Exist : New User? Please register first",Toast.LENGTH_SHORT).show();
+                    //stay in sign in
+                    finish();
                 }
             }
 

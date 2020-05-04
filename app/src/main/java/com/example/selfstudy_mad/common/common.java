@@ -14,7 +14,7 @@ import java.util.Locale;
 public class common{
     public static User currentUser;
     public static Request currentRequest;
-
+    public static String loggedin="n";
     public static String PHONE_TEXT="userPhone";
 
     private static final String BASE_URL="https://fcm.googleapis.com/";
@@ -64,6 +64,15 @@ public class common{
                 calendar)
                 .toString());
         return date.toString();
+    }
+
+    //by Rounak
+    public static String getLoggedin() {
+        return loggedin;
+    }
+
+    public static void setLoggedin(String loggedin) {
+        common.loggedin = loggedin;
     }
 
 }

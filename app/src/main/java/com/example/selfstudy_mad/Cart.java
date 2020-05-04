@@ -1,5 +1,6 @@
 package com.example.selfstudy_mad;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -60,6 +61,9 @@ public class Cart extends AppCompatActivity {
     List<Order> cart=new ArrayList<>();
     CartAdapter adapter;
     APIService mService;
+    Dialog msg;
+    Button closedialog;
+    TextView order_msg;
 
    public String haddress,gaddress;
 
@@ -81,6 +85,7 @@ public class Cart extends AppCompatActivity {
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        msg=new Dialog(this);
         txtTotalPrice=(TextView)findViewById(R.id.total);
         btnPlace=(Button)findViewById(R.id.btnPlaceOrder);
 
@@ -277,12 +282,27 @@ else{
                                 @Override
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
 
+                                    //order_msg=findViewById(R.id.success_msg);
                                         if (response.body().success == 1) {
-                                            Toast.makeText(Cart.this, "Thank You!Your Order Placed!", Toast.LENGTH_SHORT).show();
+                                            //order_msg.setText("Order Placed !! Server has been Notified");
+                                            Toast.makeText(Cart.this, "Thank You! Your Order Placed!", Toast.LENGTH_SHORT).show();
                                             finish();
-                                        } else
-                                            Toast.makeText(Cart.this, "Order Failed!Please try again", Toast.LENGTH_SHORT).show();
-                                    }
+                                        } else {
+                                            //order_msg.setText("Order Placed !! Waiting for Server to come online");
+                                            Toast.makeText(Cart.this, "Order Successful, waiting for Server", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }/*
+                                        msg.setContentView(R.layout.cart_layout);
+                                        closedialog=findViewById(R.id.close_dialog);
+                                        closedialog.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                msg.dismiss();
+                                                finish();
+                                            }
+                                        });*/
+
+                                }
 
 
                                 @Override
