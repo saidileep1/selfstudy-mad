@@ -7,12 +7,17 @@
     android:padding="16dp"
     tools:context=".Cart">
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+    >
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listCart"
         android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    </ScrollView>
 
     <androidx.cardview.widget.CardView
         android:layout_alignParentBottom="true"

@@ -221,24 +221,35 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
 
         searchadapter=new FirebaseRecyclerAdapter<Food1, FoodHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull FoodHolder foodViewHolder, int i, @NonNull Food1 food1) {
+            protected void onBindViewHolder(@NonNull final FoodHolder foodViewHolder, final int i, @NonNull final Food1 food1) {
 
                 foodViewHolder.name.setText(food1.getName());
                 Picasso.with(getBaseContext()).load(food1.getImage())
                         .into(foodViewHolder.image);
-
-                final Food1 local=food1;
-                foodViewHolder.setItemClickListener(new ItemClickListener() {
-                    @Override
-                    public void onClick(View view, int position, boolean isLongClick) {
-
-                        //Start Food Details activity
-                        Intent fooddetail =new Intent(FoodList.this,FoodDetails.class);
-                        fooddetail.putExtra("FoodId",searchadapter.getRef(position).getKey());//send foodid
-                        startActivity(fooddetail);
-                        Toast.makeText(FoodList.this,"",Toast.LENGTH_SHORT).show();
-                    }
-                });
+                final boolean isExists = new Database(getBaseContext()).checkFoodExists(searchadapter.getRef(i).getKey(), common.currentUser.getPhone());
+                if (!isExists)
+                {
+                    foodViewHolder.add.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            new Database(getBaseContext()).addToCart(new Order(
+                                    common.currentUser.getPhone(),
+                                    searchadapter.getRef(i).getKey(),
+                                    food1.getName(),
+                                    "1",
+                                    food1.getPrice(),
+                                    food1.getImage()
+                            ));
+                            Toast.makeText(FoodList.this, "ADDED TO CART", Toast.LENGTH_SHORT).show();
+                        }
+                    }); }
+                else
+                    foodViewHolder.add.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(FoodList.this,"Already added to Cart.",Toast.LENGTH_SHORT).show();
+                        }
+                    });
             }
 
             @NonNull
@@ -318,7 +329,15 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
                             ));
                             Toast.makeText(FoodList.this, "ADDED TO CART", Toast.LENGTH_SHORT).show();
                         }
-                    });}
+                    }); }
+                else
+                    foodHolder.add.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(FoodList.this,"Already added to Cart.",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
             }
 
             @NonNull
