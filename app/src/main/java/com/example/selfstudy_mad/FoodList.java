@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.selfstudy_mad.Database.Database;
 import com.example.selfstudy_mad.Interface.ItemClickListener;
@@ -38,6 +40,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.mancj.materialsearchbar.MaterialSearchBar;
+import com.rey.material.widget.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -59,6 +62,8 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
     FirebaseDatabase database;
     DatabaseReference ref;
     Switch veg;
+    CounterFab fab;
+    ImageView back;
 
     //Search Adapter
     FirebaseRecyclerAdapter<Food1, FoodHolder> searchadapter;
@@ -90,6 +95,25 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
 */
         //veg=findViewById(R.id.veg);
         //Get Category clicked
+        fab = findViewById(R.id.ffood_cart);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent cartIntent =new Intent(FoodList.this,Cart.class);
+                startActivity(cartIntent);
+            }
+        });
+        back=findViewById(R.id.nav_bar);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cartIntent =new Intent(FoodList.this,Home.class);
+                startActivity(cartIntent);
+
+            }
+        });
+
+
         Intent intent = getIntent();
         category = intent.getIntExtra(Home.EXTRA_category, 0);
         //set selected button
@@ -309,10 +333,11 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
                                     notifyDataSetChanged();
                     }
                 });*/
-               if(new Database(getBaseContext()).checkFoodExists(adapter.getRef(i).getKey(),common.currentUser.getPhone()))
-               {
-               }
-
+                if(new Database(getBaseContext()).checkFoodExists(adapter.getRef(i).getKey(),common.currentUser.getPhone()))
+                {
+                    int q=new Database(getBaseContext()).getquantity(common.currentUser.getPhone(),adapter.getRef(i).getKey());
+                    foodHolder.ele.setNumber(String.valueOf(q));
+                }
                 //Add to Cart
                 foodHolder.add.setOnClickListener(new View.OnClickListener() {
                     @Override

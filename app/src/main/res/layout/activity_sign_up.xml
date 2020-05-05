@@ -38,22 +38,22 @@ tools:context=".SignInActivity"
     app:layout_constraintTop_toTopOf="@+id/view"
     app:srcCompat="@drawable/ic_person" />
 
-<TextView
-    android:id="@+id/greeting"
-    android:layout_width="205dp"
-    android:layout_height="99dp"
-    android:layout_marginStart="28dp"
-    android:layout_marginTop="60dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="1dp"
-    android:text="Welcome New User!"
-    android:textColor="#ffffff"
-    android:textSize="26sp"
-    android:textStyle="bold"
-    app:layout_constraintBottom_toTopOf="@+id/view2"
-    app:layout_constraintEnd_toStartOf="@+id/imageView2"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@+id/view" />
+    <TextView
+        android:id="@+id/greeting"
+        android:layout_width="205dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="1dp"
+        android:text="Welcome!          Sign Up for some amazing food."
+        android:textColor="#ffffff"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/view" />
 <EditText
     android:id="@+id/name"
     android:layout_width="0dp"

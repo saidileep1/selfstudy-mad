@@ -21,13 +21,25 @@
         android:id="@+id/nav_bar"
         android:layout_width="41dp"
         android:layout_height="31dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.031"
         app:layout_constraintStart_toStartOf="@+id/menu_banner"
         app:layout_constraintTop_toTopOf="@+id/menu_banner"
-        app:srcCompat="@drawable/ic_dehaze_black_24dp" />
+        app:srcCompat="@drawable/ic_keyboard_backspace_black_24dp" />
+
+    <com.andremion.counterfab.CounterFab
+        android:id="@+id/ffood_cart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toStartOf="@+id/menu_banner"
+        app:layout_constraintTop_toTopOf="@+id/menu_banner"
+        app:srcCompat="@drawable/ic_shopping_cart_black_24dp" />
 
     <TextView
         android:id="@+id/menu_title"

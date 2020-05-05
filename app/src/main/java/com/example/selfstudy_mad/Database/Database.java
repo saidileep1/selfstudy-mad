@@ -107,6 +107,20 @@ public class Database extends SQLiteAssetHelper {
         String query=String.format("UPDATE OD SET Quantity=Quantity+1 WHERE UserPhone='%s' AND ProductId='%s'",userPhone,foodId);
         db.execSQL(query);
     }
+    public int getquantity(String userPhone,String foodId)
+    {
+        int quan=0;
+        SQLiteDatabase db=getReadableDatabase();
+        String query=String.format("SELECT Quantity FROM OD WHERE UserPhone='%s' AND ProductId='%s'",userPhone,foodId);
+        Cursor cursor=db.rawQuery(query,null);
+        if (cursor.moveToFirst())
+        {
+            do {
+                quan=cursor.getInt(0);
+            }while (cursor.moveToNext());
+        }
+        return quan;
+    }
 
 
     //Favourites
