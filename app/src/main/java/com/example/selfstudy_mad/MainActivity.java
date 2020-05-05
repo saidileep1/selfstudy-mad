@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     TextView txtSlogan;
     Timer timer;
     Intent intent;
+    Boolean flag=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,26 +45,27 @@ public class MainActivity extends AppCompatActivity {
         //Introduction Activity(Application starts here)
         Paper.init(this);
 
-        timer = new Timer();         //Create timer obj
-        //To automatically switch activity after timer over
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                intent = new Intent(MainActivity.this, SignInActivity.class);   //Switch to Dashboard
-                startActivity(intent);
-            }
-        }, 2000);
         String user = Paper.book().read(common.USER_KEY);
         String pwd = Paper.book().read(common.PWD_KEY);
 
         if (user != null && pwd != null) {
             if (!user.isEmpty() && !pwd.isEmpty()) {
                 login(user, pwd);
+                flag=true;
             }
         }
 
-
-
+        timer = new Timer();         //Create timer obj
+        //To automatically switch activity after timer over
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(!flag){
+                    intent = new Intent(MainActivity.this, SignInActivity.class);   //Switch to Dashboard
+                    startActivity(intent);
+                }
+            }
+        }, 3000);
     }
 
 /*
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         txtSlogan.setTypeface(face);
 
         //init paper
-        Paper.init(this);
+        Paper.init(this);mDialog.dismiss();
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,9 +104,9 @@ public class MainActivity extends AppCompatActivity {
     private void login(final String phone, final String pwd) {
         //save user and password
 
-        final ProgressDialog mDialog = new ProgressDialog(MainActivity.this);
+        /*final ProgressDialog mDialog = new ProgressDialog(MainActivity.this);
         mDialog.setMessage("Please wait...");
-        mDialog.show();
+        mDialog.show();*/
 
         table_user.addValueEventListener(new ValueEventListener() {
             @Override
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 //check if user not in db
                 if(dataSnapshot.child(phone).exists()) {
                     //get user inf0
-                    mDialog.dismiss();
+                    /*mDialog.dismiss();*/
                     User user = dataSnapshot.child(phone).getValue(User.class);
                     user.setPhone(phone);
                     if (user.getPassword().equals(pwd)) {
@@ -123,15 +125,15 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     } else {
                         Toast.makeText(MainActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
-                        //stay in signin
+                        startActivity(new Intent(MainActivity.this,SignInActivity.class));
                         finish();
                     }
                 }
                 else
                 {
-                    mDialog.dismiss();
-                    Toast.makeText(MainActivity.this,"User does not Exist : New User? Please register first",Toast.LENGTH_SHORT).show();
-                    //stay in sign in
+                    /*mDialog.dismiss();*/
+                    Toast.makeText(MainActivity.this,"User Not Found! Please Sign Up.",Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this,Home.class));
                     finish();
                 }
             }

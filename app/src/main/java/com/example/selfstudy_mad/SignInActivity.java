@@ -87,7 +87,7 @@ public class SignInActivity extends AppCompatActivity {
                 }
 
                 final ProgressDialog mDialog = new ProgressDialog(SignInActivity.this);
-                mDialog.setMessage("please wait...");
+                mDialog.setMessage("Please wait...");
                 mDialog.show();
 
 
@@ -113,7 +113,6 @@ public class SignInActivity extends AppCompatActivity {
                                     common.loggedin = "y";
                                     startActivity(homeIntent);
                                     finish();
-
                                     table_user.removeEventListener(this);
                                 } else {
                                     Toast.makeText(SignInActivity.this, "Wrong pasword", Toast.LENGTH_SHORT).show();

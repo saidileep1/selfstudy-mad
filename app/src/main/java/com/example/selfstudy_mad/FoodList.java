@@ -226,12 +226,12 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
                 foodViewHolder.name.setText(food1.getName());
                 Picasso.with(getBaseContext()).load(food1.getImage())
                         .into(foodViewHolder.image);
-                final boolean isExists = new Database(getBaseContext()).checkFoodExists(searchadapter.getRef(i).getKey(), common.currentUser.getPhone());
-                if (!isExists)
-                {
-                    foodViewHolder.add.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                foodViewHolder.add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final boolean isExists = new Database(getBaseContext()).checkFoodExists(searchadapter.getRef(i).getKey(), common.currentUser.getPhone());
+                        if(!isExists)
+                        {
                             new Database(getBaseContext()).addToCart(new Order(
                                     common.currentUser.getPhone(),
                                     searchadapter.getRef(i).getKey(),
@@ -242,14 +242,12 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
                             ));
                             Toast.makeText(FoodList.this, "ADDED TO CART", Toast.LENGTH_SHORT).show();
                         }
-                    }); }
-                else
-                    foodViewHolder.add.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                        else
+                        {
                             Toast.makeText(FoodList.this,"Already added to Cart.",Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+                });
             }
 
             @NonNull
@@ -310,33 +308,29 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
                     }
                 });*/
 
-
-
                 //Add to Cart
-                final boolean isExists = new Database(getBaseContext()).checkFoodExists(adapter.getRef(i).getKey(), common.currentUser.getPhone());
-                if (!isExists)
-                {
-                    foodHolder.add.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                foodHolder.add.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final boolean isExists = new Database(getBaseContext()).checkFoodExists(adapter.getRef(i).getKey(), common.currentUser.getPhone());
+                        if(!isExists)
+                        {
                             new Database(getBaseContext()).addToCart(new Order(
                                     common.currentUser.getPhone(),
                                     adapter.getRef(i).getKey(),
                                     food1.getName(),
                                     "1",
                                     food1.getPrice(),
-                                    food1.getImage()
-                            ));
+                                    food1.getImage()));
                             Toast.makeText(FoodList.this, "ADDED TO CART", Toast.LENGTH_SHORT).show();
                         }
-                    }); }
-                else
-                    foodHolder.add.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(FoodList.this,"Already added to Cart.",Toast.LENGTH_SHORT).show();
+                        else
+                        {
+                            Toast.makeText(FoodList.this,"Already Added to Cart",Toast.LENGTH_SHORT).show();
                         }
-                    });
+
+                    }
+                });
 
             }
 
