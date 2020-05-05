@@ -48,7 +48,7 @@
             android:clickable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:backgroundTint="@color/mustard"
+            app:backgroundTint="@color/white"
             app:srcCompat="@drawable/ic_shopping_cart_black_24dp"
             />
         <ScrollView

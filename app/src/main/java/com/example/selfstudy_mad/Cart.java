@@ -65,10 +65,8 @@ public class Cart extends AppCompatActivity {
     CartAdapter adapter;
     APIService mService;
     Dialog msg;
-    Button closedialog;
-    TextView order_msg;
-    ImageView i;
-    TextView empty_msg,order_t;
+    ImageView i, del;
+    TextView empty_msg, order_t;
     ScrollView s;
     CardView c;
 
@@ -92,26 +90,23 @@ public class Cart extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        i=findViewById(R.id.cart_i);
-        empty_msg=findViewById(R.id.cart_t);
+        i = findViewById(R.id.cart_i);
+        empty_msg = findViewById(R.id.cart_t);
 
         msg = new Dialog(this);
         txtTotalPrice = (TextView) findViewById(R.id.total);
         btnPlace = (Button) findViewById(R.id.btnPlaceOrder);
-        s=findViewById(R.id.cart_scroll);
-        order_t=findViewById(R.id.textView_cart);
-        c=findViewById(R.id.cart_b);
-
-        if(cart.isEmpty())
-        {
+        s = findViewById(R.id.cart_scroll);
+        order_t = findViewById(R.id.textView_cart);
+        c = findViewById(R.id.cart_b);
+        del = findViewById(R.id.cart_item_del);
+        if (cart.isEmpty()) {
             i.setVisibility(View.VISIBLE);
             empty_msg.setVisibility(View.VISIBLE);
             s.setVisibility(View.GONE);
             order_t.setVisibility(View.GONE);
             c.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             i.setVisibility(View.GONE);
             empty_msg.setVisibility(View.GONE);
             s.setVisibility(View.VISIBLE);
@@ -134,16 +129,13 @@ public class Cart extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(cart.isEmpty())
-        {
+        if (cart.isEmpty()) {
             i.setVisibility(View.VISIBLE);
             empty_msg.setVisibility(View.VISIBLE);
             s.setVisibility(View.GONE);
             order_t.setVisibility(View.GONE);
             c.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             i.setVisibility(View.GONE);
             empty_msg.setVisibility(View.GONE);
             s.setVisibility(View.VISIBLE);
@@ -167,9 +159,7 @@ public class Cart extends AppCompatActivity {
         View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
 
         final MaterialEditText address = (MaterialEditText) order_address_comment.findViewById(R.id.address);
-
         final MaterialEditText comment = (MaterialEditText) order_address_comment.findViewById(R.id.comment);
-
 
         //radio
         final RadioButton homeaddress = (RadioButton) order_address_comment.findViewById(R.id.rdihome);
@@ -181,7 +171,6 @@ public class Cart extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     address.setVisibility(View.VISIBLE);
-
                 }
             }
         });
@@ -195,7 +184,7 @@ public class Cart extends AppCompatActivity {
                         Toast.makeText(Cart.this, "Please add your address!", Toast.LENGTH_SHORT).show();
                     else
                         haddress = common.currentUser.getHomeaddress();
-                    address.setVisibility(View.INVISIBLE);
+                    address.setVisibility(View.GONE);
                 }
             }
         });
@@ -207,7 +196,6 @@ public class Cart extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (homeaddress.isChecked()) {
-
                     if (haddress == null) {
                         Toast.makeText(Cart.this, "Please Update Your Address ", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
@@ -222,7 +210,6 @@ public class Cart extends AppCompatActivity {
                                 cart
                         );
 
-
                         //Submit to Firebase
                         //Using Sytem.currentmilli to key
                         String order_number = String.valueOf(System.currentTimeMillis());
@@ -231,7 +218,6 @@ public class Cart extends AppCompatActivity {
                         //finish();
                         new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
                         sendNotificationOrder(order_number);
-
                     }
                 } else if (customaddress.isChecked()) {
                     if (address.getText().toString().length() > 0) {
@@ -244,8 +230,6 @@ public class Cart extends AppCompatActivity {
                                 comment.getText().toString(),
                                 cart
                         );
-
-
                         //Submit to Firebase
                         //Using Sytem.currentmilli to key
                         String order_number = String.valueOf(System.currentTimeMillis());
@@ -254,11 +238,8 @@ public class Cart extends AppCompatActivity {
                         //finish();
                         new Database(getBaseContext()).cleanCart(common.currentUser.getPhone());
                         sendNotificationOrder(order_number);
-
                     } else if (address.getText().toString().length() == 0)
                         Toast.makeText(Cart.this, "Please enter the address!", Toast.LENGTH_SHORT).show();
-
-
                 } else {
                     Toast.makeText(Cart.this, "Please select the Address!", Toast.LENGTH_SHORT).show();
                 }
@@ -271,10 +252,7 @@ public class Cart extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-
         alertDialog.show();
-
-
     }
 
     private void sendNotificationOrder(final String order_number) {
@@ -286,7 +264,6 @@ public class Cart extends AppCompatActivity {
 
                 for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
                     Token serverToken = postSnapShot.getValue(Token.class);
-                    //
                     Notification notification = new Notification("APP", "You have new Order" + order_number);
                     Sender content = new Sender(serverToken.getToken(), notification);
 
@@ -301,44 +278,29 @@ public class Cart extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(Cart.this, "Order Successful, waiting for Server", Toast.LENGTH_SHORT).show();
                                         finish();
-                                    }/*
-                                        msg.setContentView(R.layout.cart_layout);
-                                        closedialog=findViewById(R.id.close_dialog);
-                                        closedialog.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                msg.dismiss();
-                                                finish();
-                                            }
-                                        });*/
-
+                                    }
                                 }
-
                                 @Override
                                 public void onFailure(Call<MyResponse> call, Throwable t) {
-
                                     Log.e("ERROR", t.getMessage());
                                 }
                             });
-
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
     }
 
-    private void loadListFood() {
+    public void loadListFood() {
         cart = new Database(this).getCarts(common.currentUser.getPhone());
         adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
-//Calculate total Price
+        //Calculate total Price
         int total = 0;
         for (Order order : cart)
             total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
@@ -367,16 +329,17 @@ public class Cart extends AppCompatActivity {
         for (Order item : cart)
             new Database(this).addToCart(item);
         loadListFood();
-        if(cart.isEmpty())
-        {
+        changevisibility();
+    }
+    public void changevisibility()
+    {
+        if (cart.isEmpty()) {
             i.setVisibility(View.VISIBLE);
             empty_msg.setVisibility(View.VISIBLE);
             s.setVisibility(View.GONE);
             order_t.setVisibility(View.GONE);
             c.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             i.setVisibility(View.GONE);
             empty_msg.setVisibility(View.GONE);
             s.setVisibility(View.VISIBLE);
