@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.selfstudy_mad.Interface.ItemClickListener;
 import com.example.selfstudy_mad.R;
 
@@ -17,6 +18,7 @@ public class FoodHolder extends RecyclerView.ViewHolder implements View.OnClickL
     public TextView name,price;
     public ImageView image;
     public Button add;
+    public ElegantNumberButton ele;
     private ItemClickListener itemClickListener;
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -30,6 +32,7 @@ public class FoodHolder extends RecyclerView.ViewHolder implements View.OnClickL
         image = itemView.findViewById(R.id.item_img);
         price = itemView.findViewById(R.id.item_price);
         add=itemView.findViewById(R.id.add_button);
+        ele=itemView.findViewById(R.id.add_e_button);
     }
 
     @Override

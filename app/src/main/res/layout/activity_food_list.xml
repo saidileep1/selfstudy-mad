@@ -148,12 +148,11 @@
 
         <com.mancj.materialsearchbar.MaterialSearchBar
             android:id="@+id/searchBar"
-            android:background="@drawable/round_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/round_search"
             app:mt_hint="Find your Desired Dishes here!"
-            app:mt_speechMode="false">
-        </com.mancj.materialsearchbar.MaterialSearchBar>
+            app:mt_speechMode="false"></com.mancj.materialsearchbar.MaterialSearchBar>
         <!--<Switch
             android:id="@+id/veg"
             android:layout_width="wrap_content"

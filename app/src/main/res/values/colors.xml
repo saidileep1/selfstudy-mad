@@ -16,6 +16,7 @@
     <color name="white">#ffffff</color>
     <color name="red">#db3514</color>
     <color name="grey">#808080</color>
+    <color name="dark_grey">#a9a9a9</color>
     <color name="order_status_background">#d1d1d1</color>
 
     <color name="mustard">#ffaf2f</color>

@@ -19,6 +19,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.example.selfstudy_mad.Database.Database;
 import com.example.selfstudy_mad.Interface.ItemClickListener;
 import com.example.selfstudy_mad.Model.Food;
@@ -307,6 +308,10 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
                                     notifyDataSetChanged();
                     }
                 });*/
+               if(new Database(getBaseContext()).checkFoodExists(adapter.getRef(i).getKey(),common.currentUser.getPhone()))
+               {
+                   
+               }
 
                 //Add to Cart
                 foodHolder.add.setOnClickListener(new View.OnClickListener() {
@@ -323,12 +328,24 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
                                     food1.getPrice(),
                                     food1.getImage()));
                             Toast.makeText(FoodList.this, "ADDED TO CART", Toast.LENGTH_SHORT).show();
+                            foodHolder.add.setVisibility(View.GONE);
+                            foodHolder.ele.setVisibility(View.VISIBLE);
                         }
-                        else
+                        else {
+                            Toast.makeText(FoodList.this, "Already Added to Cart", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                foodHolder.ele.setNumber("1");
+                foodHolder.ele.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+                        new Database(getBaseContext()).increaseCart(common.currentUser.getPhone(),adapter.getRef(i).getKey());
+                        if(newValue==0)
                         {
-                            Toast.makeText(FoodList.this,"Already Added to Cart",Toast.LENGTH_SHORT).show();
+                            foodHolder.add.setVisibility(View.VISIBLE);
+                            foodHolder.ele.setVisibility(View.GONE);
                         }
-
                     }
                 });
 

@@ -12,8 +12,8 @@
         app:cardCornerRadius="20dp"
         android:layout_margin="8dp"
         >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -27,50 +27,68 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/pizza" />
 
-            <TextView
-                android:id="@+id/item_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Farm House Pizza"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.509"
-                app:layout_constraintStart_toEndOf="@+id/item_img"
-                app:layout_constraintTop_toTopOf="parent" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
 
-            <TextView
-                android:id="@+id/item_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rs. 400"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.497"
-                app:layout_constraintStart_toEndOf="@+id/item_img"
-                app:layout_constraintTop_toBottomOf="@+id/item_title" />
+                <TextView
+                    android:id="@+id/item_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_centerHorizontal="true"
+                    android:text="Farm House Pizza"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/add_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="79dp"
-                android:background="@drawable/red_add_button"
-                android:text="ADD"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/item_img"
-                app:layout_constraintTop_toBottomOf="@+id/item_price"
-                app:layout_constraintVertical_bias="0.48" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/item_title"
+                    android:text="Rs. 400"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/add_button"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/item_price"
+                    android:layout_marginStart="79dp"
+                    android:background="@drawable/red_add_button"
+                    android:layout_centerHorizontal="true"
+                    android:text="ADD"
+                    android:visibility="visible"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                    android:id="@+id/add_e_button"
+                    android:layout_width="75dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@id/item_price"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="79dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/red_add_button"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    app:textColor="@color/black"
+                    android:visibility="gone"
+                    app:backGroundColor="@color/red"
+                    app:initialNumber="0"
+                    app:finalNumber="20"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
