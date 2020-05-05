@@ -1,6 +1,7 @@
 package com.example.selfstudy_mad;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -310,7 +311,6 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
                 });*/
                if(new Database(getBaseContext()).checkFoodExists(adapter.getRef(i).getKey(),common.currentUser.getPhone()))
                {
-                   
                }
 
                 //Add to Cart
