@@ -234,6 +234,7 @@ public class FoodList extends AppCompatActivity implements View.OnClickListener{
 
         //load it's menu
         loadListFood(categoryid);
+        loadSuggest();
     }
 
     private void startSearch(CharSequence text) {

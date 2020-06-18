@@ -1,10 +1,12 @@
 package com.example.selfstudy_mad;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,9 +23,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 public class OrderStatus extends AppCompatActivity {
 
@@ -32,6 +37,10 @@ public class OrderStatus extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference requests;
     FirebaseRecyclerAdapter<Request, OrderViewHolder> adapter;
+
+    ImageView  i;
+    TextView t;
+    RelativeLayout r;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +56,9 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        i=findViewById(R.id.empty_order);
+        t=findViewById(R.id.textView_m);
+        r=findViewById(R.id.order_1);
         //if we start Orderactivity from Home activity
         //We will no to put any extra,so we just load order by phone from Common
         if (getIntent().getExtras() == null) {
@@ -61,6 +73,28 @@ public class OrderStatus extends AppCompatActivity {
                 .setQuery(getOrderByUser, Request.class)
                 .build();
 
+        getOrderByUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    r.setBackgroundColor(Color.WHITE);
+                    i.setVisibility(View.GONE);
+                    t.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+                else{
+                    r.setBackgroundColor(Color.parseColor("#d1d1d1"));
+                    i.setVisibility(View.VISIBLE);
+                    t.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         adapter = new FirebaseRecyclerAdapter<Request, OrderViewHolder>(options) {
             @Override

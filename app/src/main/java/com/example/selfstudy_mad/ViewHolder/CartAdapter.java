@@ -113,6 +113,16 @@ public class CartAdapter extends RecyclerView.Adapter<CardViewHolder> {
                 Locale locale = new Locale("en", "IN");
                 NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
                 cart.txtTotalPrice.setText(fmt.format(total));
+                if(newValue==0)
+                {
+                    listData.remove(position);
+                    new Database(cart.getBaseContext()).cleanCart(common.currentUser.getPhone());
+                    //update new data from sqlite
+                    for (Order item : listData)
+                        new Database(cart).addToCart(item);
+                    cart.loadListFood();
+                    cart.changevisibility();
+                }
             }
         });
         Locale locale = new Locale("en", "IN");

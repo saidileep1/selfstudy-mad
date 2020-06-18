@@ -63,7 +63,7 @@
             android:background="@drawable/round_yellow_btn"
             app:textSize="8sp"
             app:backGroundColor="@color/colorPrimary"
-            app:initialNumber="1"
+            app:initialNumber="0"
             app:finalNumber="20">
 
         </com.cepheuen.elegantnumberbutton.view.ElegantNumberButton>
