@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -119,7 +120,16 @@ public class SignInActivity extends AppCompatActivity {
                                 }
                             } else {
                                 mDialog.dismiss();
-                                Toast.makeText(SignInActivity.this, "User does not Exist;New User?Please register first", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignInActivity.this, "User does not Exist", Toast.LENGTH_SHORT).show();
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        Toast.makeText(SignInActivity.this, "New User? Please register first", Toast.LENGTH_SHORT).show();
+                                    }
+                                }, 2000);
                             }
                         }
 

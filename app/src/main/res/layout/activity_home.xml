@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_dehaze_black_24dp"
-            app:titleTextColor="@color/black" />
+            app:titleTextColor="@color/white" />
 
         <com.andremion.counterfab.CounterFab
             android:id="@+id/floatingActionButton"
@@ -80,6 +80,7 @@
                     android:id="@+id/viewPager"
                     android:layout_width="match_parent"
                     android:layout_height="320sp"
+                    android:layout_marginTop="10dp"
                     android:clipToPadding="false"
                     android:foregroundGravity="center"
                     android:overScrollMode="never"
